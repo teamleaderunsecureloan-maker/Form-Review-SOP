@@ -338,6 +338,24 @@ textarea{resize:vertical;min-height:80px;line-height:1.5;}
   max-width:320px;line-height:1.4;}
 #toast.show{opacity:1;transform:translateY(0);}
 
+/* ── CONFIG MODAL */
+#configModal{position:fixed;inset:0;background:rgba(0,0,0,0.5);
+  display:none;align-items:center;justify-content:center;z-index:997;}
+#configModal.open{display:flex;}
+.config-box{background:white;border-radius:14px;padding:28px 32px;width:100%;max-width:520px;
+  margin:20px;box-shadow:0 20px 60px rgba(0,0,0,0.2);}
+.config-title{font-size:16px;font-weight:600;color:var(--navy);margin-bottom:6px;}
+.config-sub{font-size:13px;color:var(--mgray);margin-bottom:20px;line-height:1.6;}
+.config-field{margin-bottom:16px;}
+.config-field label{font-size:11px;font-weight:600;color:var(--mgray);
+  text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:6px;}
+.config-field input{width:100%;padding:10px 13px;border:1px solid var(--border);
+  border-radius:8px;font-family:var(--mono);font-size:13px;outline:none;}
+.config-field input:focus{border-color:var(--blue);}
+.config-status{font-size:12px;margin-top:8px;padding:8px 12px;border-radius:6px;}
+.config-ok{background:var(--lteal);color:var(--teal);}
+.config-err{background:var(--lred);color:var(--red);}
+
 /* ── LOADING */
 #loadingOverlay{position:fixed;inset:0;background:rgba(27,58,107,0.75);
   display:none;align-items:center;justify-content:center;z-index:998;flex-direction:column;gap:14px;}
@@ -367,6 +385,24 @@ textarea{resize:vertical;min-height:80px;line-height:1.5;}
 <div id="loadingOverlay"><div class="spinner"></div><div class="loading-txt" id="loadingTxt">Memuat…</div></div>
 <div id="toast"></div>
 
+<!-- CONFIG MODAL -->
+<div id="configModal">
+  <div class="config-box">
+    <div class="config-title">⚙️ Konfigurasi Koneksi Google Sheets</div>
+    <div class="config-sub">Paste URL Apps Script Web App untuk menyimpan data ke Google Sheets secara otomatis. Data tetap tersimpan di browser meski tidak terhubung.</div>
+    <div class="config-field">
+      <label>Apps Script Web App URL</label>
+      <input type="text" id="configUrl" placeholder="https://script.google.com/macros/s/…/exec"/>
+    </div>
+    <div id="configStatusMsg"></div>
+    <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:20px;flex-wrap:wrap;">
+      <button class="btn btn-outline" style="font-size:13px;" onclick="testConnection()">🔍 Test Koneksi</button>
+      <button class="btn btn-outline" style="font-size:13px;" onclick="closeConfig()">Batal</button>
+      <button class="btn btn-primary" style="font-size:13px;" onclick="saveConfig()">💾 Simpan &amp; Tutup</button>
+    </div>
+  </div>
+</div>
+
 <!-- TOPBAR -->
 <div class="topbar" id="mainTopbar">
   <div class="topbar-brand">
@@ -379,6 +415,8 @@ textarea{resize:vertical;min-height:80px;line-height:1.5;}
   <div class="topbar-tabs">
     <button class="tab-btn active" onclick="switchTab('form',this)">📝 Isi / Edit Review</button>
     <button class="tab-btn" id="arsipTabBtn" onclick="switchTab('arsip',this)">🗂 Arsip &amp; Feedback</button>
+    <button class="tab-btn" onclick="openConfig()" title="Konfigurasi koneksi Google Sheets"
+      style="font-size:16px;padding:8px 14px;" id="configBtn">⚙️</button>
   </div>
 </div>
 
@@ -410,7 +448,7 @@ textarea{resize:vertical;min-height:80px;line-height:1.5;}
       </div>
       <div class="field">
         <label>Unit / Jabatan</label>
-        <input type="text" id="fUnit" placeholder="Contoh: Unit Product Research & Development"/>
+        <input type="text" id="fUnit" placeholder="Contoh: Unit Product Research & Development "/>
       </div>
     </div>
     <div class="grid2">
@@ -523,11 +561,11 @@ textarea{resize:vertical;min-height:80px;line-height:1.5;}
     <!-- PANDUAN BERPIKIR -->
     <div class="guide-box">
       <div class="guide-header" onclick="toggleGuide(this)">
-        <div class="guide-title">🧭 4 Pertanyaan untuk Mengecek Kelengkapan Dokumen</div>
+        <div class="guide-title">🧭 4 Pertanyaan untuk Mengecek Kelengkapan Dokumen </div>
         <span class="guide-icon">▸ Buka</span>
       </div>
       <div class="guide-body" style="display:none">
-        <div class="guide-intro">Baca dokumen dari awal sampai akhir terlebih dahulu sebelum mengisi bagian ini. Tujuan review bukan mencari kekurangan, tapi memahami sejauh mana dokumen ini dapat menjawab kebutuhan operasional proses Kupen — termasuk bagian yang sudah baik. Setelah membaca, gunakan 4 pertanyaan berikut sebagai alat bantu berpikir. Tidak semua pertanyaan akan relevan untuk setiap dokumen — dan itu wajar. Kalau sebuah pertanyaan sudah terjawab dengan jelas di dokumen, berarti tidak ada gap di sana, dan itu adalah temuan yang sama pentingnya.</div>
+        <div class="guide-intro"> Baca dokumen dari awal sampai akhir terlebih dahulu sebelum mengisi bagian ini. Tujuan review bukan mencari kekurangan, tapi memahami sejauh mana dokumen ini dapat menjawab kebutuhan operasional proses Kupen — termasuk bagian yang sudah baik. Setelah membaca, gunakan 4 pertanyaan berikut sebagai alat bantu berpikir. Tidak semua pertanyaan akan relevan untuk setiap dokumen — dan itu wajar. Kalau sebuah pertanyaan sudah terjawab dengan jelas di dokumen, berarti tidak ada gap di sana, dan itu adalah temuan yang sama pentingnya. </div>
         <div class="guide-questions">
           <div class="guide-q"><span class="guide-q-num">1</span><div><strong>SIAPA yang harus melakukan ini?</strong><div class="guide-q-hint">Apakah dokumen menyebut jabatan atau fungsi yang bertanggung jawab? Kalau tidak ada — kemungkinan gap SDM.</div></div></div>
           <div class="guide-q"><span class="guide-q-num">2</span><div><strong>KAPAN harus dilakukan, berapa batas waktunya?</strong><div class="guide-q-hint">Apakah ada tanggal, jam, atau SLA? Kalau tidak ada batas waktu — kemungkinan gap Sistem atau SDM.</div></div></div>
@@ -925,8 +963,13 @@ async function submitForm() {
   const ep = pScript || ls('kupen_script_url');
   if (ep) {
     try {
-      await fetch(ep, { method:'POST', mode:'no-cors',
-        headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload) });
+      const params = new URLSearchParams({
+        action: payload.action,
+        ...Object.fromEntries(Object.entries(payload).map(([k,v]) =>
+          [k, typeof v === 'object' ? JSON.stringify(v) : String(v ?? '')]
+        ))
+      });
+      await fetch(`${ep}?${params.toString()}`, { mode:'cors' });
     } catch(e) { /* silent — local save already done */ }
   }
 
@@ -964,12 +1007,33 @@ async function loadArsip(forceSync) {
       const res  = await fetch(url, { mode:'cors' });
       const json = await res.json();
       if (json.submissions?.length) {
-        // Merge: sheets is source of truth for metadata, but keep local feedback
+        // Merge: Sheets is source of truth, but merge feedbackHistory from both
         const localMap = {};
         subs.forEach(s => { localMap[s.rowId] = s; });
-        json.submissions.forEach(s => {
-          if (!localMap[s.rowId]) subs.push(s);
+
+        json.submissions.forEach(remote => {
+          const local = localMap[remote.rowId];
+          if (local) {
+            // Merge feedbackHistory: combine both arrays, deduplicate by timestamp
+            const allFb = [
+              ...(remote.feedbackHistory || []),
+              ...(local.feedbackHistory  || []),
+            ];
+            const seen = new Set();
+            remote.feedbackHistory = allFb.filter(f => {
+              const key = f.timestamp || f.nama;
+              if (seen.has(key)) return false;
+              seen.add(key); return true;
+            });
+            remote.feedback = remote.feedbackHistory[remote.feedbackHistory.length-1] || null;
+            // Update local entry
+            localMap[remote.rowId] = remote;
+          } else {
+            localMap[remote.rowId] = remote;
+          }
         });
+
+        subs = Object.values(localMap);
         saveLocalSubmissions(subs);
         toast('✓ Data disinkronisasi dari Google Sheets');
       }
@@ -1358,19 +1422,21 @@ async function saveFeedback(fbId, rowId) {
   const ep = pScript || ls('kupen_script_url');
   if (ep) {
     try {
-      await fetch(ep, { method:'POST', mode:'no-cors',
-        headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({
-          action: 'submitFeedback',
-          code:   subs[idx]?.code || '',
-          reviewerTarget: subs[idx]?.reviewer || '',
-          editRowId: rowId,
-          fbNama: feedback.nama, fbJabatan: feedback.jabatan,
-          verdict: feedback.verdict, poins: feedback.poins,
-          apresiasi: feedback.apresiasi, catatanSOP: feedback.catatanSOP,
-          deadline: feedback.deadline, timestamp: feedback.timestamp,
-        })
+      const sub  = subs[idx];
+      const params = new URLSearchParams({
+        action:         'submitFeedback',
+        code:           sub?.code || '',
+        reviewerTarget: sub?.reviewer || '',
+        reviewRowId:    rowId,
+        nama:           feedback.nama,
+        jabatan:        feedback.jabatan,
+        verdict:        feedback.verdict,
+        poins:          feedback.poins,
+        apresiasi:      feedback.apresiasi,
+        catatanSOP:     feedback.catatanSOP,
+        deadline:       feedback.deadline,
       });
+      await fetch(`${ep}?${params.toString()}`, { mode:'cors' });
     } catch(e) {}
   }
 
@@ -1536,15 +1602,71 @@ function confirmDelete(rowId) {
   }, 4000);
 }
 
-function executeDelete(rowId) {
+async function executeDelete(rowId) {
   const subs    = getLocalSubmissions();
   const updated = subs.filter(s => s.rowId !== rowId);
   saveLocalSubmissions(updated);
   delete window._cardData[rowId];
+
+  // Also delete from Sheets if connected
+  const ep = pScript || ls('kupen_script_url');
+  if (ep) {
+    try {
+      await fetch(`${ep}?action=deleteSubmission&rowId=${encodeURIComponent(rowId)}`, { mode:'cors' });
+    } catch(e) {}
+  }
+
   toast('🗑 Submission dihapus');
-  // Re-render with current filter
   loadArsip();
 }
+
+// ════════════════════════════════════════════════════════════════════════
+// CONFIG MODAL
+// ════════════════════════════════════════════════════════════════════════
+function openConfig() {
+  const saved = ls('kupen_script_url');
+  document.getElementById('configUrl').value = saved || '';
+  document.getElementById('configStatusMsg').innerHTML = saved
+    ? '<div class="config-status config-ok">\u2713 URL tersimpan dan aktif</div>'
+    : '';
+  document.getElementById('configModal').classList.add('open');
+}
+function closeConfig() {
+  document.getElementById('configModal').classList.remove('open');
+}
+function saveConfig() {
+  const url = document.getElementById('configUrl').value.trim();
+  if (!url) { toast('\u26a0 URL tidak boleh kosong'); return; }
+  ls('kupen_script_url', url);
+  toast('\u2705 URL tersimpan — form sekarang terhubung ke Google Sheets');
+  closeConfig();
+  const btn = document.getElementById('configBtn');
+  if (btn) { btn.textContent = '\u2705'; setTimeout(() => { btn.textContent = '\u2699\ufe0f'; }, 3000); }
+}
+async function testConnection() {
+  const url = document.getElementById('configUrl').value.trim();
+  const msg = document.getElementById('configStatusMsg');
+  if (!url) { msg.innerHTML = '<div class="config-status config-err">\u26a0 Masukkan URL dulu</div>'; return; }
+  msg.innerHTML = '<div class="config-status" style="background:var(--lgray)">\ud83d\udd0d Sedang tes koneksi\u2026</div>';
+  try {
+    const res  = await fetch(url + '?action=ping', { mode:'cors' });
+    const json = await res.json();
+    if (json.ok || json.version || json.actions) {
+      msg.innerHTML = '<div class="config-status config-ok">\u2705 Terhubung! Apps Script v' + (json.version||'?') + ' \u2014 siap digunakan</div>';
+    } else {
+      msg.innerHTML = '<div class="config-status config-err">\u26a0 Respons tidak dikenal</div>';
+    }
+  } catch(e) {
+    msg.innerHTML = '<div class="config-status config-err">\u274c Gagal terhubung \u2014 pastikan URL benar dan deploy sebagai "Anyone can access"</div>';
+  }
+}
+(function checkConfigOnLoad() {
+  const saved = ls('kupen_script_url');
+  if (saved) {
+    const btn = document.getElementById('configBtn');
+    if (btn) btn.title = 'Terhubung ke Sheets \u2014 klik untuk ubah URL';
+  }
+})();
 
 // TOAST & LOADING
 // ════════════════════════════════════════════════════════════════════════
