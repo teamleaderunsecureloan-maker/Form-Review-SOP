@@ -1,0 +1,1563 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Form Review SOP — Ekosistem Kupen</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:#1B3A6B; --blue:#2E5FA3; --sky:#EFF6FF; --blueMid:#BFDBFE;
+  --teal:#1A6B5E; --lteal:#ECFDF5;
+  --red:#991B1B;  --lred:#FEF2F2;
+  --amber:#92400E; --lamber:#FFFBEB;
+  --purple:#5B21B6; --lpurple:#F5F3FF;
+  --gray:#374151; --mgray:#9CA3AF; --lgray:#F3F4F6;
+  --border:#E5E7EB; --white:#FFFFFF; --dark:#1F2937;
+  --font:'DM Sans',sans-serif; --mono:'DM Mono',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--font);background:#F1F5F9;color:var(--gray);min-height:100vh;padding-bottom:80px;}
+
+/* ── TOPBAR */
+.topbar{background:var(--navy);padding:0 32px;display:flex;align-items:stretch;}
+.topbar-brand{display:flex;align-items:center;gap:14px;padding:14px 0;flex:1;}
+.topbar-logo{width:34px;height:34px;border-radius:8px;background:rgba(255,255,255,0.15);
+  display:flex;align-items:center;justify-content:center;font-weight:700;color:white;font-size:15px;flex-shrink:0;}
+.topbar-title{font-size:15px;font-weight:600;color:white;}
+.topbar-sub{font-size:12px;color:rgba(255,255,255,0.5);margin-top:1px;}
+.topbar-tabs{display:flex;align-items:flex-end;gap:2px;margin-left:auto;}
+.tab-btn{padding:10px 20px;font-family:var(--font);font-size:13px;font-weight:500;
+  background:none;border:none;color:rgba(255,255,255,0.55);cursor:pointer;
+  border-bottom:3px solid transparent;transition:all .15s;white-space:nowrap;}
+.tab-btn:hover{color:white;}
+.tab-btn.active{color:white;border-bottom-color:var(--blueMid);}
+.tab-panel{display:none;} .tab-panel.active{display:block;}
+
+/* ── PAGE */
+.page{max-width:880px;margin:32px auto;padding:0 20px;}
+
+/* ── DOC BANNER */
+.doc-banner{background:var(--navy);border-radius:12px;padding:20px 24px;margin-bottom:24px;
+  display:flex;align-items:center;gap:16px;}
+.doc-badge{background:rgba(255,255,255,0.15);border-radius:8px;padding:10px 16px;
+  font-family:var(--mono);font-size:15px;font-weight:600;color:white;white-space:nowrap;}
+.doc-info-name{font-size:17px;font-weight:600;color:white;}
+.doc-info-sub{font-size:13px;color:rgba(255,255,255,0.55);margin-top:3px;}
+.edit-badge{background:var(--amber);color:white;font-size:11px;font-weight:600;
+  padding:3px 10px;border-radius:20px;margin-left:10px;display:none;}
+
+/* ── SECTION */
+.section{background:white;border-radius:12px;border:1px solid var(--border);
+  padding:24px 28px;margin-bottom:20px;}
+.section-title{font-size:13px;font-weight:600;color:var(--navy);
+  text-transform:uppercase;letter-spacing:.6px;margin-bottom:18px;
+  padding-bottom:10px;border-bottom:2px solid var(--sky);}
+.section-title span{font-weight:400;color:var(--mgray);text-transform:none;
+  letter-spacing:0;font-size:12px;margin-left:8px;}
+
+/* ── FIELDS */
+.field{margin-bottom:18px;}
+.field:last-child{margin-bottom:0;}
+label{display:block;font-size:12px;font-weight:600;color:var(--mgray);
+  text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;}
+label .req{color:var(--red);}
+input[type=text],select,textarea{
+  width:100%;padding:10px 13px;border:1px solid var(--border);border-radius:8px;
+  font-family:var(--font);font-size:14px;color:var(--gray);outline:none;
+  transition:border .15s,box-shadow .15s;background:white;}
+input:focus,select:focus,textarea:focus{
+  border-color:var(--blue);box-shadow:0 0 0 3px rgba(46,95,163,0.08);}
+textarea{resize:vertical;min-height:80px;line-height:1.5;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.field-hint{font-size:12px;color:var(--mgray);margin-top:5px;line-height:1.5;}
+
+/* ── ASPEK CARDS */
+.aspek-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.aspek-card{border:2px solid var(--border);border-radius:10px;padding:16px;
+  transition:all .15s;cursor:pointer;}
+.aspek-card.checked{border-color:var(--blue);background:var(--sky);}
+.aspek-card input[type=checkbox]{display:none;}
+.aspek-header{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.aspek-icon{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:15px;}
+.aspek-label{font-weight:600;font-size:14px;color:var(--navy);}
+.aspek-desc{font-size:12px;color:var(--mgray);line-height:1.5;}
+.aspek-card.checked .aspek-label{color:var(--blue);}
+
+/* ── STATUS & PROGRESS */
+.status-options{display:flex;gap:10px;flex-wrap:wrap;}
+.status-opt{display:flex;align-items:center;gap:8px;padding:9px 16px;
+  border:1.5px solid var(--border);border-radius:8px;cursor:pointer;
+  transition:all .15s;font-size:13px;font-weight:500;}
+.status-opt input{display:none;}
+.status-opt.sel-proses.selected{border-color:var(--amber);background:var(--lamber);color:var(--amber);}
+.status-opt.sel-selesai.selected{border-color:var(--teal);background:var(--lteal);color:var(--teal);}
+.progress-opts{display:flex;gap:8px;flex-wrap:wrap;}
+.progress-opt{padding:6px 14px;border-radius:20px;border:1.5px solid var(--border);
+  font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;font-family:var(--mono);}
+.progress-opt.selected{background:var(--navy);border-color:var(--navy);color:white;}
+
+/* ── GAP TABLE */
+/* ── GUIDE BOX */
+.guide-box{border:1px solid var(--blueMid);border-radius:10px;overflow:hidden;margin-bottom:16px;}
+.guide-header{display:flex;align-items:center;justify-content:space-between;
+  padding:12px 16px;background:var(--sky);cursor:pointer;user-select:none;}
+.guide-title{font-size:13px;font-weight:600;color:var(--blue);}
+.guide-icon{font-size:12px;color:var(--blue);font-weight:600;white-space:nowrap;}
+.guide-body{padding:16px;background:white;border-top:1px solid var(--blueMid);}
+.guide-intro{font-size:13px;color:var(--gray);margin-bottom:12px;font-weight:500;}
+.guide-questions{display:flex;flex-direction:column;gap:10px;}
+.guide-q{display:flex;gap:12px;align-items:flex-start;}
+.guide-q-num{width:24px;height:24px;border-radius:50%;background:var(--blue);color:white;
+  display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:1px;}
+.guide-q strong{font-size:13px;color:var(--dark);}
+.guide-q-hint{font-size:12px;color:var(--mgray);margin-top:3px;line-height:1.5;}
+.guide-tip{margin-top:12px;padding:10px 14px;background:var(--lgray);border-radius:8px;
+  font-size:12px;color:var(--mgray);}
+
+/* ── GAP CARDS */
+.gap-card{border:1px solid var(--border);border-radius:10px;padding:16px;
+  margin-bottom:12px;background:white;transition:border-color .15s;}
+.gap-card:hover{border-color:var(--blue);}
+.gap-card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.gap-card-num{font-family:var(--mono);font-size:11px;font-weight:600;
+  color:var(--mgray);background:var(--lgray);padding:3px 10px;border-radius:20px;}
+.del-gap{background:none;border:none;color:var(--mgray);cursor:pointer;
+  font-size:18px;line-height:1;padding:0 4px;}
+.del-gap:hover{color:var(--red);}
+.gap-field{margin-bottom:12px;}
+.gap-field:last-child{margin-bottom:0;}
+.gap-field label{font-size:11px;font-weight:600;color:var(--mgray);
+  text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:6px;}
+.gap-field select,.gap-field textarea,.gap-field input{
+  width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:8px;
+  font-family:var(--font);font-size:13px;color:var(--gray);outline:none;}
+.gap-field select:focus,.gap-field textarea:focus{
+  border-color:var(--blue);box-shadow:0 0 0 3px rgba(46,95,163,0.06);}
+.gap-field textarea{resize:vertical;min-height:64px;line-height:1.5;}
+
+/* PEMANDU PILIHAN (checkboxes) */
+.guide-checks{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;}
+.guide-check{display:flex;align-items:center;gap:6px;padding:6px 12px;
+  border:1.5px solid var(--border);border-radius:20px;cursor:pointer;
+  font-size:12px;font-weight:500;transition:all .15s;user-select:none;}
+.guide-check input{display:none;}
+.guide-check.checked-p{border-color:var(--blue);background:var(--sky);color:var(--blue);}
+.guide-check.checked-s{border-color:var(--amber);background:var(--lamber);color:var(--amber);}
+.guide-check.checked-m{border-color:#9D174D;background:#FCE7F3;color:#9D174D;}
+.guide-check.checked-i{border-color:var(--teal);background:var(--lteal);color:var(--teal);}
+
+/* DAMPAK PILLS */
+.dampak-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;}
+.dampak-opt{padding:6px 14px;border-radius:20px;border:1.5px solid var(--border);
+  font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;}
+.dampak-opt[data-val="tinggi"].selected{background:var(--lred);border-color:var(--red);color:var(--red);}
+.dampak-opt[data-val="sedang"].selected{background:var(--lamber);border-color:var(--amber);color:var(--amber);}
+.dampak-opt[data-val="rendah"].selected{background:var(--lteal);border-color:var(--teal);color:var(--teal);}
+
+.add-gap-btn{margin-top:4px;padding:9px 16px;border:1.5px dashed var(--blue);border-radius:9px;
+  background:var(--sky);color:var(--blue);font-family:var(--font);font-size:13px;
+  font-weight:500;cursor:pointer;width:100%;transition:all .15s;}
+.add-gap-btn:hover{background:var(--blue);color:white;}
+
+/* ── SUBMIT BAR */
+.submit-bar{background:white;border-top:1px solid var(--border);
+  padding:14px 28px;display:flex;align-items:center;justify-content:space-between;
+  position:sticky;bottom:0;z-index:10;gap:12px;}
+.submit-note{font-size:12px;color:var(--mgray);}
+.btn{padding:10px 24px;border:none;border-radius:9px;font-family:var(--font);
+  font-size:14px;font-weight:600;cursor:pointer;transition:background .15s;}
+.btn-primary{background:var(--teal);color:white;}
+.btn-primary:hover{background:var(--navy);}
+.btn-outline{background:white;color:var(--gray);border:1px solid var(--border);}
+.btn-outline:hover{background:var(--lgray);}
+.btn-amber{background:var(--amber);color:white;}
+.btn-amber:hover{background:#78350F;}
+.btn-purple{background:var(--purple);color:white;}
+.btn-purple:hover{background:#4C1D95;}
+.btn:disabled{background:var(--mgray);cursor:not-allowed;}
+
+/* ── INFO BOX */
+.info-box{padding:12px 16px;border-radius:8px;border-left:4px solid;
+  font-size:13px;line-height:1.6;margin-bottom:16px;}
+.info-blue{background:var(--sky);border-color:var(--blue);}
+.info-amber{background:var(--lamber);border-color:var(--amber);}
+
+/* ── ARSIP TAB ── */
+.arsip-topbar{display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:20px;flex-wrap:wrap;gap:10px;}
+.arsip-search-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+.arsip-search-row input,.arsip-search-row select{
+  padding:8px 12px;border:1px solid var(--border);border-radius:8px;
+  font-family:var(--font);font-size:13px;outline:none;}
+.arsip-search-row input{width:200px;}
+.arsip-search-row input:focus,.arsip-search-row select:focus{border-color:var(--blue);}
+
+/* ── SUBMISSION CARD */
+.sub-card{background:white;border:1px solid var(--border);border-radius:12px;
+  margin-bottom:16px;overflow:hidden;transition:box-shadow .15s;}
+.sub-card:hover{box-shadow:0 2px 12px rgba(0,0,0,0.08);}
+.sub-card-header{padding:18px 22px;display:flex;align-items:flex-start;
+  justify-content:space-between;gap:12px;cursor:pointer;}
+.sub-doc-code{font-family:var(--mono);font-size:12px;color:var(--blue);font-weight:600;}
+.sub-doc-name{font-size:15px;font-weight:600;color:var(--navy);margin-top:2px;}
+.sub-meta{font-size:12px;color:var(--mgray);margin-top:4px;line-height:1.6;}
+.sub-right{display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex-shrink:0;}
+.sub-actions{display:flex;gap:6px;}
+
+.badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;
+  border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap;}
+.badge::before{content:'';width:6px;height:6px;border-radius:50%;}
+.badge-selesai{background:var(--lteal);color:var(--teal);}   .badge-selesai::before{background:var(--teal);}
+.badge-proses {background:var(--lamber);color:var(--amber);}  .badge-proses::before{background:var(--amber);}
+.badge-belum  {background:var(--lgray);color:var(--mgray);}   .badge-belum::before{background:var(--mgray);}
+
+.fb-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;
+  border-radius:20px;font-size:11px;font-weight:600;}
+.fb-disetujui{background:var(--lteal);color:var(--teal);}
+.fb-revisi{background:var(--lamber);color:var(--amber);}
+.fb-ulang{background:var(--lred);color:var(--red);}
+.fb-pending{background:var(--lpurple);color:var(--purple);}
+
+.gap-pills{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;}
+.gap-pill{padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;}
+
+/* ── EXPAND AREA */
+.sub-expand{display:none;border-top:1px solid var(--border);}
+.sub-expand.open{display:block;}
+
+/* Detail review */
+.sub-detail{padding:18px 22px;background:var(--lgray);}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
+.detail-item{background:white;border-radius:8px;padding:12px 14px;border:1px solid var(--border);}
+.detail-label{font-size:11px;font-weight:600;color:var(--mgray);text-transform:uppercase;
+  letter-spacing:.4px;margin-bottom:4px;}
+.detail-value{font-size:13px;color:var(--dark);line-height:1.5;}
+.detail-full{grid-column:1/-1;}
+
+/* Gap list inside detail */
+.gap-detail-list{margin-top:10px;}
+.gap-detail-item{display:flex;gap:10px;padding:8px 12px;border-radius:6px;
+  margin-bottom:6px;align-items:flex-start;}
+.gap-detail-item:last-child{margin-bottom:0;}
+.gap-detail-item.gap-tinggi{background:var(--lred);}
+.gap-detail-item.gap-sedang{background:var(--lamber);}
+.gap-detail-item.gap-rendah{background:var(--lteal);}
+.gap-detail-icon{font-size:13px;flex-shrink:0;margin-top:1px;}
+.gap-detail-text{font-size:13px;line-height:1.5;flex:1;}
+.gap-detail-aspek{font-size:11px;font-weight:600;opacity:.75;margin-bottom:2px;}
+
+/* ── FEEDBACK PANEL ── */
+/* ── FEEDBACK HISTORY */
+.fb-history{padding:0 22px 16px;}
+.fb-history-title{font-size:11px;font-weight:600;color:var(--purple);text-transform:uppercase;
+  letter-spacing:.6px;margin-bottom:10px;}
+.fb-round{border:1px solid rgba(91,33,182,0.2);border-radius:10px;margin-bottom:10px;overflow:hidden;}
+.fb-round-header{display:flex;align-items:center;justify-content:space-between;
+  padding:10px 14px;background:white;cursor:pointer;}
+.fb-round-meta{font-size:12px;color:var(--mgray);}
+.fb-round-badge{font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px;}
+.fb-round-body{display:none;padding:12px 14px;background:var(--lpurple);
+  border-top:1px solid rgba(91,33,182,0.15);}
+.fb-round-body.open{display:block;}
+.fb-learning{margin-top:12px;padding:12px 14px;background:rgba(91,33,182,0.06);
+  border-radius:8px;border-left:3px solid var(--purple);}
+.fb-learning-title{font-size:11px;font-weight:600;color:var(--purple);margin-bottom:4px;
+  text-transform:uppercase;letter-spacing:.4px;}
+.fb-learning-text{font-size:13px;color:var(--dark);line-height:1.6;}
+
+/* ── FEEDBACK HISTORY */
+.fb-history{padding:0 22px 16px;}
+.fb-history-title{font-size:11px;font-weight:600;color:var(--purple);text-transform:uppercase;
+  letter-spacing:.6px;margin-bottom:10px;}
+.fb-round{border:1px solid rgba(91,33,182,0.2);border-radius:10px;margin-bottom:10px;overflow:hidden;}
+.fb-round-header{display:flex;align-items:center;justify-content:space-between;
+  padding:10px 14px;background:white;cursor:pointer;}
+.fb-round-meta{font-size:12px;color:var(--mgray);}
+.fb-round-badge{font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px;}
+.fb-round-body{display:none;padding:12px 14px;background:var(--lpurple);
+  border-top:1px solid rgba(91,33,182,0.15);}
+.fb-round-body.open{display:block;}
+.fb-learning{margin-top:10px;padding:12px 14px;background:rgba(91,33,182,0.08);
+  border-radius:8px;border-left:3px solid var(--purple);}
+.fb-learning-title{font-size:11px;font-weight:600;color:var(--purple);margin-bottom:4px;
+  text-transform:uppercase;letter-spacing:.4px;}
+.fb-learning-text{font-size:13px;color:var(--dark);line-height:1.6;}
+
+.feedback-panel{border-top:2px solid var(--purple);background:var(--lpurple);}
+.feedback-panel-header{padding:14px 22px;display:flex;align-items:center;
+  justify-content:space-between;cursor:pointer;}
+.feedback-panel-title{font-size:13px;font-weight:600;color:var(--purple);
+  display:flex;align-items:center;gap:8px;}
+.feedback-toggle-icon{font-size:16px;transition:transform .2s;}
+.feedback-toggle-icon.open{transform:rotate(180deg);}
+.feedback-form{display:none;padding:0 22px 20px;}
+.feedback-form.open{display:block;}
+
+.verdict-opts{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;}
+.verdict-opt{padding:9px 16px;border:2px solid var(--border);border-radius:10px;
+  cursor:pointer;font-size:13px;font-weight:600;transition:all .15s;min-width:130px;text-align:center;}
+.verdict-opt .verdict-sub{font-size:11px;font-weight:400;margin-top:3px;opacity:.7;}
+.verdict-opt[data-val="disetujui"].selected{background:var(--lteal);border-color:var(--teal);color:var(--teal);}
+.verdict-opt[data-val="revisi"].selected{background:var(--lamber);border-color:var(--amber);color:var(--amber);}
+.verdict-opt[data-val="ulang"].selected{background:var(--lred);border-color:var(--red);color:var(--red);}
+
+.poin-wrap{margin-top:6px;}
+.poin-item{display:flex;gap:8px;margin-bottom:8px;align-items:flex-start;}
+.poin-num{width:22px;height:22px;border-radius:50%;background:var(--purple);color:white;
+  display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;
+  flex-shrink:0;margin-top:4px;}
+.poin-input{flex:1;padding:8px 12px;border:1px solid var(--border);border-radius:7px;
+  font-family:var(--font);font-size:13px;resize:none;min-height:44px;outline:none;}
+.poin-input:focus{border-color:var(--purple);}
+.del-poin{background:none;border:none;color:var(--mgray);cursor:pointer;font-size:16px;padding:2px 4px;margin-top:4px;}
+.del-poin:hover{color:var(--red);}
+.add-poin-btn{padding:6px 14px;border:1px dashed var(--purple);border-radius:6px;
+  background:white;color:var(--purple);font-family:var(--font);font-size:12px;
+  font-weight:500;cursor:pointer;transition:all .15s;}
+.add-poin-btn:hover{background:var(--purple);color:white;}
+
+/* Existing feedback display */
+.feedback-display{padding:16px 22px;}
+.fb-display-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.fb-display-by{font-size:12px;color:var(--mgray);}
+.fb-poin-list{margin:8px 0;}
+.fb-poin{display:flex;gap:8px;margin-bottom:6px;font-size:13px;align-items:flex-start;}
+.fb-poin-dot{color:var(--purple);font-weight:700;flex-shrink:0;}
+
+/* ── EMPTY & ERROR */
+.empty-state{text-align:center;padding:60px 20px;color:var(--mgray);}
+.empty-icon{font-size:48px;margin-bottom:12px;}
+.empty-title{font-size:16px;font-weight:600;color:var(--dark);margin-bottom:6px;}
+.empty-sub{font-size:13px;line-height:1.6;max-width:360px;margin:0 auto 20px;}
+
+/* ── TOAST */
+#toast{position:fixed;bottom:90px;right:24px;background:var(--dark);color:white;
+  padding:10px 18px;border-radius:8px;font-size:13px;
+  opacity:0;transform:translateY(6px);transition:all .25s;pointer-events:none;z-index:999;
+  max-width:320px;line-height:1.4;}
+#toast.show{opacity:1;transform:translateY(0);}
+
+/* ── LOADING */
+#loadingOverlay{position:fixed;inset:0;background:rgba(27,58,107,0.75);
+  display:none;align-items:center;justify-content:center;z-index:998;flex-direction:column;gap:14px;}
+#loadingOverlay.visible{display:flex;}
+.spinner{width:36px;height:36px;border:3px solid rgba(255,255,255,0.2);
+  border-top-color:white;border-radius:50%;animation:spin .7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.loading-txt{color:white;font-size:14px;}
+
+/* ── SUCCESS */
+#successScreen{display:none;}
+#successScreen .inner{text-align:center;padding:60px 20px;}
+.success-icon{font-size:56px;margin-bottom:16px;}
+.success-title{font-size:22px;font-weight:600;margin-bottom:8px;}
+.success-sub{font-size:15px;color:var(--mgray);max-width:420px;margin:0 auto 24px;line-height:1.6;}
+.success-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+
+@media(max-width:600px){
+  .grid2,.aspek-grid{grid-template-columns:1fr;}
+  .topbar-tabs .tab-btn{padding:10px 12px;font-size:12px;}
+  .detail-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<div id="loadingOverlay"><div class="spinner"></div><div class="loading-txt" id="loadingTxt">Memuat…</div></div>
+<div id="toast"></div>
+
+<!-- TOPBAR -->
+<div class="topbar" id="mainTopbar">
+  <div class="topbar-brand">
+    <div class="topbar-logo">K</div>
+    <div>
+      <div class="topbar-title">Form Review Dokumen Referensi — Ekosistem SOP Kupen</div>
+      <div class="topbar-sub">Tim Inventarisasi Internal · Internal Terbatas</div>
+    </div>
+  </div>
+  <div class="topbar-tabs">
+    <button class="tab-btn active" onclick="switchTab('form',this)">📝 Isi / Edit Review</button>
+    <button class="tab-btn" id="arsipTabBtn" onclick="switchTab('arsip',this)">🗂 Arsip &amp; Feedback</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════ TAB: FORM ═══════════════════════════════════════ -->
+<div class="tab-panel active" id="tab-form">
+<div class="page">
+
+  <!-- BANNER -->
+  <div class="doc-banner">
+    <div class="doc-badge" id="bannerCode">—</div>
+    <div style="flex:1">
+      <div style="display:flex;align-items:center;gap:8px">
+        <div class="doc-info-name" id="bannerName">Pilih dokumen yang Anda review</div>
+        <span class="edit-badge" id="editBadge">MODE EDIT</span>
+      </div>
+      <div class="doc-info-sub" id="bannerSub">Pastikan Anda sudah membaca seluruh dokumen sebelum mengisi form ini</div>
+    </div>
+    <button class="btn btn-outline" style="font-size:12px;padding:7px 14px;color:white;
+      border-color:rgba(255,255,255,0.3);background:rgba(255,255,255,0.1)" onclick="resetForm()">+ Form Baru</button>
+  </div>
+
+  <!-- 01 IDENTITAS -->
+  <div class="section">
+    <div class="section-title">01 · Identitas Reviewer</div>
+    <div class="grid2">
+      <div class="field">
+        <label>Nama Lengkap <span class="req">*</span></label>
+        <input type="text" id="fNama" placeholder="Masukkan nama Anda"/>
+      </div>
+      <div class="field">
+        <label>Unit / Jabatan</label>
+        <input type="text" id="fUnit" placeholder="Contoh: Divisi Kredit Konsumer"/>
+      </div>
+    </div>
+    <div class="grid2">
+      <div class="field">
+        <label>Dokumen yang Direview <span class="req">*</span></label>
+        <select id="fDoc">
+          <option value="">— Pilih dokumen —</option>
+          <option value="JUK-FLG-ASB">JUK-FLG-ASB — Juklak Flagging ASABRI</option>
+          <option value="JUK-SPTB">JUK-SPTB — Juklak Autentikasi &amp; SPTB</option>
+          <option value="JUK-DCRM">JUK-DCRM — Juklak Pemeriksaan Dokumen DCRM</option>
+          <option value="SOP-ASR">SOP-ASR — Prosedur Pengelolaan Asuransi Kredit</option>
+          <option value="SOP-DOK">SOP-DOK — Prosedur Dokumentasi Kredit Konsumer</option>
+          <option value="SOP-TO">SOP-TO — Prosedur Take Over Kredit Konsumer</option>
+          <option value="SOP-EDPM">SOP-EDPM — Kebijakan Pengelolaan e-Dapem</option>
+          <option value="LAINNYA">Dokumen lain (isi manual)</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Tanggal Review</label>
+        <input type="text" id="fTanggal" placeholder="DD/MM/YYYY"/>
+      </div>
+    </div>
+    <div class="field" id="docManualField" style="display:none">
+      <label>Nama Dokumen (manual)</label>
+      <input type="text" id="fDocManual" placeholder="Masukkan nama dokumen"/>
+    </div>
+  </div>
+
+  <!-- 02 STATUS -->
+  <div class="section">
+    <div class="section-title">02 · Status Review</div>
+    <div class="field">
+      <label>Status saat ini <span class="req">*</span></label>
+      <div class="status-options">
+        <div class="status-opt sel-proses" onclick="selectStatus('proses',this)">
+          <input type="radio" name="status" value="proses"> 🔄 Sedang Proses
+        </div>
+        <div class="status-opt sel-selesai" onclick="selectStatus('selesai',this)">
+          <input type="radio" name="status" value="selesai"> ✅ Selesai Direview
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <label>Persentase penyelesaian</label>
+      <div class="progress-opts">
+        <div class="progress-opt" onclick="selectProgress(25,this)">25%</div>
+        <div class="progress-opt" onclick="selectProgress(50,this)">50%</div>
+        <div class="progress-opt" onclick="selectProgress(75,this)">75%</div>
+        <div class="progress-opt" onclick="selectProgress(100,this)">100%</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 03 ASPEK -->
+  <div class="section">
+    <div class="section-title">03 · Aspek yang Dicakup Dokumen Ini <span>centang semua yang relevan</span></div>
+    <div class="aspek-grid">
+      <div class="aspek-card" onclick="toggleAspek('P',this)">
+        <input type="checkbox" id="aspekP" value="P">
+        <div class="aspek-header"><div class="aspek-icon" style="background:#DBEAFE">📋</div><div class="aspek-label">Produk</div></div>
+        <div class="aspek-desc">Ketentuan kredit, kategori pengajuan, persyaratan, suku bunga, fee</div>
+      </div>
+      <div class="aspek-card" onclick="toggleAspek('S',this)">
+        <input type="checkbox" id="aspekS" value="S">
+        <div class="aspek-header"><div class="aspek-icon" style="background:#FEF3C7">⚙️</div><div class="aspek-label">Sistem</div></div>
+        <div class="aspek-desc">Konfigurasi sistem, flagging, auto settlement, SLA teknis, monitoring</div>
+      </div>
+      <div class="aspek-card" onclick="toggleAspek('M',this)">
+        <input type="checkbox" id="aspekM" value="M">
+        <div class="aspek-header"><div class="aspek-icon" style="background:#FCE7F3">👥</div><div class="aspek-label">SDM</div></div>
+        <div class="aspek-desc">Distribusi tugas, kewenangan, eskalasi, kompetensi, penanggung jawab</div>
+      </div>
+      <div class="aspek-card" onclick="toggleAspek('I',this)">
+        <input type="checkbox" id="aspekI" value="I">
+        <div class="aspek-header"><div class="aspek-icon" style="background:#D1FAE5">🗂️</div><div class="aspek-label">Infrastruktur</div></div>
+        <div class="aspek-desc">Dokumen referensi, template, registri, kode standar, penyimpanan</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 04 RINGKASAN -->
+  <div class="section">
+    <div class="section-title">04 · Ringkasan Dokumen</div>
+    <div class="field">
+      <label>Tujuan utama dokumen ini <span class="req">*</span></label>
+      <textarea id="fTujuan" placeholder="Jelaskan secara singkat: dokumen ini dibuat untuk apa dan ditujukan kepada siapa…"></textarea>
+    </div>
+    <div class="field">
+      <label>Cakupan yang sudah memadai</label>
+      <textarea id="fKuat" placeholder="Bagian mana dari dokumen ini yang sudah cukup lengkap dan operasional?"></textarea>
+    </div>
+    <div class="field">
+      <label>Karakter dokumen</label>
+      <select id="fKarakter">
+        <option value="">— Pilih —</option>
+        <option value="panduan_teknis">Panduan teknis / manual aplikasi</option>
+        <option value="sop_operasional">SOP operasional lintas fungsi</option>
+        <option value="kebijakan">Dokumen kebijakan / ketentuan</option>
+        <option value="template">Template / formulir</option>
+        <option value="campuran">Campuran lebih dari satu</option>
+      </select>
+      <div class="field-hint">Karakter dokumen penting untuk menentukan apakah ia dapat langsung mengisi gap di SOP Kupen atau memerlukan jembatan tambahan.</div>
+    </div>
+  </div>
+
+  <!-- 05 GAP -->
+  <div class="section">
+    <div class="section-title">05 · Identifikasi Gap terhadap SOP Kupen <span>ikuti pertanyaan pemandu untuk setiap gap</span></div>
+
+    <!-- PANDUAN BERPIKIR -->
+    <div class="guide-box">
+      <div class="guide-header" onclick="toggleGuide(this)">
+        <div class="guide-title">🧭 Cara Menemukan Gap — Klik untuk buka panduan</div>
+        <span class="guide-icon">▸ Buka</span>
+      </div>
+      <div class="guide-body" style="display:none">
+        <div class="guide-intro">Tanyakan 4 hal ini untuk setiap proses di dalam dokumen yang sedang Anda review:</div>
+        <div class="guide-questions">
+          <div class="guide-q"><span class="guide-q-num">1</span><div><strong>SIAPA yang harus melakukan ini?</strong><div class="guide-q-hint">Apakah dokumen menyebut jabatan atau fungsi yang bertanggung jawab? Kalau tidak ada — kemungkinan gap SDM.</div></div></div>
+          <div class="guide-q"><span class="guide-q-num">2</span><div><strong>KAPAN harus dilakukan, berapa batas waktunya?</strong><div class="guide-q-hint">Apakah ada tanggal, jam, atau SLA? Kalau tidak ada batas waktu — kemungkinan gap Sistem atau SDM.</div></div></div>
+          <div class="guide-q"><span class="guide-q-num">3</span><div><strong>KONDISI APA yang memicu proses ini?</strong><div class="guide-q-hint">Apakah dokumen menjelaskan syarat atau trigger-nya? Kalau bisa dimulai kapan saja tanpa syarat — kemungkinan gap.</div></div></div>
+          <div class="guide-q"><span class="guide-q-num">4</span><div><strong>KALAU GAGAL, apa yang terjadi selanjutnya?</strong><div class="guide-q-hint">Apakah ada eskalasi, fallback, atau prosedur darurat yang disebutkan? Kalau tidak ada — ini gap kritis.</div></div></div>
+        </div>
+        <div class="guide-tip">💡 <strong>Tips:</strong> Satu proses bisa punya lebih dari satu gap. Isi satu kartu per gap — jangan gabungkan beberapa gap dalam satu kartu.</div>
+      </div>
+    </div>
+
+    <!-- GAP CARDS -->
+    <div id="gapBody"></div>
+    <button class="add-gap-btn" onclick="addGapRow()">+ Tambah Gap Baru</button>
+  </div>
+
+
+  <!-- 06 KETERKAITAN -->
+  <div class="section">
+    <div class="section-title">06 · Keterkaitan dengan SOP Kupen</div>
+    <div class="field">
+      <label>Apakah dokumen ini menyebut SOP Kupen secara eksplisit?</label>
+      <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:4px;">
+        <label style="text-transform:none;letter-spacing:0;font-size:14px;font-weight:400;display:flex;align-items:center;gap:6px;cursor:pointer;">
+          <input type="radio" name="rSebut" value="ya"> Ya — ada rujukan eksplisit
+        </label>
+        <label style="text-transform:none;letter-spacing:0;font-size:14px;font-weight:400;display:flex;align-items:center;gap:6px;cursor:pointer;">
+          <input type="radio" name="rSebut" value="tidak"> Tidak — berdiri sendiri
+        </label>
+        <label style="text-transform:none;letter-spacing:0;font-size:14px;font-weight:400;display:flex;align-items:center;gap:6px;cursor:pointer;">
+          <input type="radio" name="rSebut" value="sebagian"> Sebagian — tersirat saja
+        </label>
+      </div>
+    </div>
+    <div class="field">
+      <label>Penilaian tingkat integrasi dengan SOP Kupen</label>
+      <select id="fIntegrasi">
+        <option value="">— Pilih —</option>
+        <option value="terintegrasi">Terintegrasi — dapat langsung menjawab kebutuhan SOP Kupen</option>
+        <option value="perlu_jembatan">Perlu jembatan — relevan tapi butuh konteks tambahan</option>
+        <option value="berdiri_sendiri">Berdiri sendiri — tidak tersambung dengan proses kredit</option>
+        <option value="tumpang_tindih">Tumpang tindih — ada ketentuan yang saling bertentangan</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Rekomendasi utama</label>
+      <textarea id="fRekomen" placeholder="Apa yang perlu dilakukan untuk memperkuat keterkaitan dokumen ini dengan SOP Kupen?"></textarea>
+    </div>
+    <div class="field">
+      <label>Catatan lain</label>
+      <textarea id="fCatatan" placeholder="Hal-hal lain yang perlu diperhatikan tim penyusun SOP…" style="min-height:60px;"></textarea>
+    </div>
+  </div>
+
+</div><!-- /page -->
+
+<!-- SUBMIT BAR FORM -->
+<div class="submit-bar" id="formSubmitBar">
+  <div class="submit-note">Isi semua field wajib (*) sebelum submit</div>
+  <div style="display:flex;gap:8px;">
+    <button class="btn btn-outline" onclick="saveDraft()" style="font-size:13px;padding:9px 18px;">💾 Draft</button>
+    <button class="btn btn-primary" id="submitBtn" onclick="submitForm()">Kirim Review →</button>
+  </div>
+</div>
+</div><!-- /tab-form -->
+
+
+<!-- ═══════════════════════ TAB: ARSIP & FEEDBACK ══════════════════════════ -->
+<div class="tab-panel" id="tab-arsip">
+<div class="page">
+
+  <div class="arsip-topbar">
+    <div>
+      <div style="font-size:16px;font-weight:600;color:var(--navy)" id="arsipTitle">Arsip &amp; Feedback</div>
+      <div style="font-size:12px;color:var(--mgray);margin-top:2px" id="arsipCount">Cari submission dengan nama reviewer di bawah</div>
+    </div>
+    <div class="arsip-search-row">
+      <input id="searchNama" placeholder="Nama reviewer…" onkeydown="if(event.key==='Enter')loadArsip()"/>
+      <select id="searchDoc">
+        <option value="">Semua dokumen</option>
+        <option value="JUK-FLG-ASB">JUK-FLG-ASB</option>
+        <option value="JUK-SPTB">JUK-SPTB</option>
+        <option value="JUK-DCRM">JUK-DCRM</option>
+        <option value="SOP-ASR">SOP-ASR</option>
+        <option value="SOP-DOK">SOP-DOK</option>
+        <option value="SOP-TO">SOP-TO</option>
+        <option value="SOP-EDPM">SOP-EDPM</option>
+      </select>
+      <button class="btn btn-primary" style="padding:8px 18px;font-size:13px;" onclick="loadArsip()">🔍 Cari</button>
+      <button class="btn btn-outline" style="padding:8px 14px;font-size:13px;" onclick="loadArsip(true)" title="Muat ulang dari Sheets jika tersambung">↻ Sync</button>
+    </div>
+  </div>
+
+  <div id="arsipCards"></div>
+
+</div><!-- /page arsip -->
+</div><!-- /tab-arsip -->
+
+
+<!-- ═══════════════════════ SUCCESS SCREEN ════════════════════════════════ -->
+<div id="successScreen">
+  <div class="inner">
+    <div class="success-icon" id="successIcon">✅</div>
+    <div class="success-title" id="successTitle" style="color:var(--teal)">Review Berhasil Dikirim!</div>
+    <div class="success-sub" id="successMsg">Data tersimpan dan dapat dilihat di tab Arsip &amp; Feedback.</div>
+    <div class="success-actions">
+      <button class="btn btn-primary" onclick="resetForm();showMain()">+ Isi Review Baru</button>
+      <button class="btn btn-outline" onclick="gotoArsip()">🗂 Lihat Arsip Saya</button>
+    </div>
+  </div>
+</div>
+
+
+<script>
+// ════════════════════════════════════════════════════════════════════════
+// CONFIG & STATE
+// ════════════════════════════════════════════════════════════════════════
+const P       = new URLSearchParams(location.search);
+const pDoc    = P.get('doc')    || '';
+const pName   = decodeURIComponent(P.get('name') || '');
+const pScript = P.get('script') || ls('kupen_script_url');
+
+let selStatus   = '';
+let selProgress = 0;
+let gapCount    = 0;
+let editMode    = false;
+let editRowId   = '';
+
+// localStorage helper — safe
+function ls(k, v) {
+  try {
+    if (v !== undefined) { localStorage.setItem(k, v); return; }
+    return localStorage.getItem(k) || '';
+  } catch(e) { return ''; }
+}
+
+// In-memory submission store (survives tab switches, not page reload)
+// Also backed by localStorage for same-browser persistence
+const STORE_KEY = 'kupen_submissions';
+function getLocalSubmissions() {
+  try { return JSON.parse(localStorage.getItem(STORE_KEY) || '[]'); }
+  catch(e) { return []; }
+}
+function saveLocalSubmissions(arr) {
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(arr)); } catch(e) {}
+}
+
+// ════════════════════════════════════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════════════════════════════════════
+(function init() {
+  const today = new Date();
+  document.getElementById('fTanggal').value =
+    `${pad(today.getDate())}/${pad(today.getMonth()+1)}/${today.getFullYear()}`;
+  if (pDoc) {
+    document.getElementById('bannerCode').textContent = pDoc;
+    document.getElementById('bannerName').textContent = pName || pDoc;
+    const s = document.getElementById('fDoc');
+    for (let o of s.options) if (o.value === pDoc) { o.selected = true; break; }
+  }
+  addGapRow(); addGapRow();
+})();
+
+function pad(n) { return String(n).padStart(2,'0'); }
+
+// ════════════════════════════════════════════════════════════════════════
+// TAB SWITCHING
+// ════════════════════════════════════════════════════════════════════════
+function switchTab(tab, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.add('active');
+  if (btn) btn.classList.add('active');
+  else document.querySelector(`.tab-btn:nth-child(${tab==='form'?1:2})`).classList.add('active');
+}
+function showMain() {
+  document.getElementById('successScreen').style.display = 'none';
+  document.getElementById('mainTopbar').style.display    = '';
+  document.getElementById('tab-form').style.display      = '';
+  document.getElementById('formSubmitBar').style.display = '';
+  switchTab('form', null);
+}
+function gotoArsip() {
+  showMain();
+  switchTab('arsip', null);
+  // auto-fill last reviewer name
+  const subs = getLocalSubmissions();
+  if (subs.length) document.getElementById('searchNama').value = subs[subs.length-1].reviewer || '';
+  loadArsip();
+}
+
+// ════════════════════════════════════════════════════════════════════════
+// FORM CONTROLS
+// ════════════════════════════════════════════════════════════════════════
+function toggleAspek(val, card) {
+  const cb = card.querySelector('input[type=checkbox]');
+  cb.checked = !cb.checked;
+  card.classList.toggle('checked', cb.checked);
+}
+function selectStatus(val, el) {
+  selStatus = val;
+  document.querySelectorAll('.status-opt').forEach(e => e.classList.remove('selected'));
+  el.classList.add('selected');
+}
+function selectProgress(val, el) {
+  selProgress = val;
+  document.querySelectorAll('.progress-opt').forEach(e => e.classList.remove('selected'));
+  el.classList.add('selected');
+}
+document.getElementById('fDoc').addEventListener('change', function() {
+  document.getElementById('docManualField').style.display = this.value==='LAINNYA'?'block':'none';
+  const opt = this.options[this.selectedIndex];
+  if (opt && opt.value && opt.value !== 'LAINNYA') {
+    document.getElementById('bannerCode').textContent = opt.value;
+    document.getElementById('bannerName').textContent = opt.text.split('—')[1]?.trim() || opt.text;
+  }
+});
+
+// ════════════════════════════════════════════════════════════════════════
+// GAP ROWS
+// ════════════════════════════════════════════════════════════════════════
+// ── GAP GUIDE TOGGLE ─────────────────────────────────────────────────────────
+function toggleGuide(header) {
+  const body = header.nextElementSibling;
+  const icon = header.querySelector('.guide-icon');
+  const open = body.style.display === 'none';
+  body.style.display = open ? 'block' : 'none';
+  icon.textContent   = open ? '▾ Tutup' : '▸ Buka';
+}
+
+// ── GAP CARDS ─────────────────────────────────────────────────────────────────
+function addGapRow(aspek='', desc='', dampak='', pemandu=[]) {
+  gapCount++;
+  const n = gapCount;
+  const id = `gc${n}`;
+  const div = document.createElement('div');
+  div.className = 'gap-card'; div.id = id;
+
+  // Pemandu pilihan options
+  const pemandus = [
+    { val:'siapa',  label:'❓ Tidak ada yang bertanggung jawab (SIAPA)' },
+    { val:'kapan',  label:'⏱ Tidak ada batas waktu / SLA (KAPAN)' },
+    { val:'kondisi',label:'⚠️ Tidak ada syarat atau trigger (KONDISI)' },
+    { val:'gagal',  label:'🚨 Tidak ada prosedur jika gagal (GAGAL)' },
+    { val:'lainnya',label:'📋 Gap lainnya' },
+  ];
+  const pemChecks = pemandus.map(p => {
+    const checked = pemandu.includes(p.val);
+    return `<div class="guide-check${checked?' checked-p':''}" data-val="${p.val}"
+      onclick="togglePemandu(this,'${id}')"><input type="checkbox"${checked?' checked':''}>${p.label}</div>`;
+  }).join('');
+
+  div.innerHTML = `
+    <div class="gap-card-header">
+      <span class="gap-card-num">GAP #${n}</span>
+      <button class="del-gap" onclick="document.getElementById('${id}').remove()">×</button>
+    </div>
+
+    <div class="gap-field">
+      <label>Aspek</label>
+      <select class="gap-aspek">
+        <option value="">— Pilih aspek —</option>
+        <option value="Sistem"${aspek==='Sistem'?' selected':''}>⚙️ Sistem</option>
+        <option value="SDM"${aspek==='SDM'?' selected':''}>👥 SDM</option>
+        <option value="Produk"${aspek==='Produk'?' selected':''}>📋 Produk</option>
+        <option value="Infrastruktur"${aspek==='Infrastruktur'?' selected':''}>🗂️ Infrastruktur</option>
+      </select>
+    </div>
+
+    <div class="gap-field">
+      <label>Jenis gap yang ditemukan <span style="font-weight:400;color:var(--mgray)">(pilih yang sesuai)</span></label>
+      <div class="guide-checks" id="${id}_pemandu">${pemChecks}</div>
+    </div>
+
+    <div class="gap-field">
+      <label>Deskripsi gap <span class="req">*</span></label>
+      <textarea class="gap-desc" placeholder="Contoh: Dokumen tidak menyebutkan siapa yang harus submit flagging — apakah AO, Operation, atau Cabang. Akibatnya setiap cabang melakukan sendiri-sendiri.">${desc}</textarea>
+    </div>
+
+    <div class="gap-field">
+      <label>Tingkat dampak terhadap proses Kupen</label>
+      <div class="dampak-row">
+        <div class="dampak-opt${dampak==='tinggi'?' selected':''}" data-val="tinggi" onclick="selDampak(this,'${id}')">🔴 Tinggi — proses bisa berhenti / salah</div>
+        <div class="dampak-opt${dampak==='sedang'?' selected':''}" data-val="sedang" onclick="selDampak(this,'${id}')">🟡 Sedang — berisiko tapi masih bisa jalan</div>
+        <div class="dampak-opt${dampak==='rendah'?' selected':''}" data-val="rendah" onclick="selDampak(this,'${id}')">🟢 Rendah — perlu diperbaiki tapi tidak mendesak</div>
+      </div>
+    </div>`;
+
+  document.getElementById('gapBody').appendChild(div);
+}
+
+function togglePemandu(el, cardId) {
+  const val     = el.dataset.val;
+  const checked = !el.querySelector('input').checked;
+  el.querySelector('input').checked = checked;
+  // Color class based on whether checked
+  el.className = 'guide-check' + (checked ? ' checked-p' : '');
+}
+
+function selDampak(el, cardId) {
+  el.closest('.dampak-row').querySelectorAll('.dampak-opt').forEach(d => d.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function collectGaps() {
+  return [...document.querySelectorAll('#gapBody .gap-card')].map(card => {
+    const pemandus = [...card.querySelectorAll('.guide-check input:checked')].map(c => c.parentElement.dataset.val);
+    return {
+      aspek:   card.querySelector('.gap-aspek')?.value || '',
+      desc:    card.querySelector('.gap-desc')?.value?.trim() || '',
+      dampak:  card.querySelector('.dampak-opt.selected')?.dataset.val || '',
+      pemandu: pemandus,
+    };
+  }).filter(g => g.desc);
+}
+
+// ════════════════════════════════════════════════════════════════════════
+// COLLECT PAYLOAD
+// ════════════════════════════════════════════════════════════════════════
+function collectPayload() {
+  const aspekChecked = ['P','S','M','I'].filter(a => document.getElementById('aspek'+a)?.checked);
+  const gaps   = collectGaps();
+  const docVal = document.getElementById('fDoc').value;
+  const code   = docVal === 'LAINNYA' ? document.getElementById('fDocManual').value : docVal;
+  const gapH   = gaps.filter(g => g.dampak==='tinggi').length;
+  const gapM   = gaps.filter(g => g.dampak==='sedang').length;
+  return {
+    rowId:     editMode ? editRowId : ('R' + Date.now() + Math.random().toString(36).slice(2,5).toUpperCase()),
+    code,
+    name:      document.getElementById('bannerName').textContent,
+    type:      document.getElementById('fKarakter').value,
+    reviewer:  document.getElementById('fNama').value.trim(),
+    unit:      document.getElementById('fUnit').value.trim(),
+    tanggal:   document.getElementById('fTanggal').value,
+    status:    selStatus,
+    progress:  selProgress || (selStatus==='selesai'?100:50),
+    aspek:     aspekChecked.join(','),
+    tujuan:    document.getElementById('fTujuan').value.trim(),
+    kuat:      document.getElementById('fKuat').value.trim(),
+    karakter:  document.getElementById('fKarakter').value,
+    integrasi: document.getElementById('fIntegrasi').value,
+    rSebut:    document.querySelector('input[name="rSebut"]:checked')?.value || '',
+    rekomen:   document.getElementById('fRekomen').value.trim(),
+    catatan:   document.getElementById('fCatatan').value.trim(),
+    gapH, gapM,
+    gapS_H:    gaps.filter(g=>g.aspek==='Sistem'&&g.dampak==='tinggi').length,
+    gapM_H:    gaps.filter(g=>g.aspek==='SDM'&&g.dampak==='tinggi').length,
+    gapP_H:    gaps.filter(g=>g.aspek==='Produk'&&g.dampak==='tinggi').length,
+    gapI_H:    gaps.filter(g=>g.aspek==='Infrastruktur'&&g.dampak==='tinggi').length,
+    gapsJson:  JSON.stringify(gaps),
+    timestamp: new Date().toISOString(),
+    feedback:  null,  // feedback disimpan terpisah di dalam objek ini
+  };
+}
+
+// ════════════════════════════════════════════════════════════════════════
+// SAVE TO LOCAL STORE
+// ════════════════════════════════════════════════════════════════════════
+function saveToLocal(payload) {
+  const subs = getLocalSubmissions();
+  if (editMode && editRowId) {
+    const idx = subs.findIndex(s => s.rowId === editRowId);
+    if (idx >= 0) {
+      // Preserve existing feedback when editing
+      payload.feedback = subs[idx].feedback || null;
+      subs[idx] = payload;
+    } else {
+      subs.push(payload);
+    }
+  } else {
+    subs.push(payload);
+  }
+  saveLocalSubmissions(subs);
+}
+
+// ════════════════════════════════════════════════════════════════════════
+// SUBMIT REVIEW
+// ════════════════════════════════════════════════════════════════════════
+async function submitForm() {
+  const nama   = document.getElementById('fNama').value.trim();
+  const docVal = document.getElementById('fDoc').value;
+  if (!nama)           { toast('⚠ Nama reviewer wajib diisi'); return; }
+  if (!docVal)         { toast('⚠ Pilih dokumen yang Anda review'); return; }
+  if (!selStatus)      { toast('⚠ Pilih status review (Sedang Proses / Selesai)'); return; }
+
+  const payload = collectPayload();
+  payload.action = editMode ? 'updateReview' : 'submitReview';
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true; btn.textContent = 'Menyimpan…';
+
+  // Always save locally first
+  saveToLocal(payload);
+
+  // Then try to sync to Sheets
+  const ep = pScript || ls('kupen_script_url');
+  if (ep) {
+    try {
+      await fetch(ep, { method:'POST', mode:'no-cors',
+        headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload) });
+    } catch(e) { /* silent — local save already done */ }
+  }
+
+  btn.disabled = false; btn.textContent = 'Kirim Review →';
+  showSuccess(editMode ? 'edit' : 'new');
+}
+
+// ════════════════════════════════════════════════════════════════════════
+// DRAFT
+// ════════════════════════════════════════════════════════════════════════
+function saveDraft() {
+  try {
+    const d = collectPayload();
+    ls('kupen_draft_' + (d.code||'x'), JSON.stringify(d));
+    toast('💾 Draft tersimpan di browser');
+  } catch(e) { toast('Gagal menyimpan draft'); }
+}
+
+// ════════════════════════════════════════════════════════════════════════
+// LOAD ARSIP — dari localStorage, opsional sync dari Sheets
+// ════════════════════════════════════════════════════════════════════════
+async function loadArsip(forceSync) {
+  const nama   = document.getElementById('searchNama').value.trim();
+  const docFil = document.getElementById('searchDoc').value;
+
+  // Load from local first
+  let subs = getLocalSubmissions();
+
+  // Optionally sync from Sheets
+  const ep = pScript || ls('kupen_script_url');
+  if ((forceSync || !subs.length) && ep) {
+    showLoading('Memuat dari Google Sheets…');
+    try {
+      const url = `${ep}?action=getSubmissions&reviewer=${encodeURIComponent(nama)}&doc=${encodeURIComponent(docFil)}`;
+      const res  = await fetch(url, { mode:'cors' });
+      const json = await res.json();
+      if (json.submissions?.length) {
+        // Merge: sheets is source of truth for metadata, but keep local feedback
+        const localMap = {};
+        subs.forEach(s => { localMap[s.rowId] = s; });
+        json.submissions.forEach(s => {
+          if (!localMap[s.rowId]) subs.push(s);
+        });
+        saveLocalSubmissions(subs);
+        toast('✓ Data disinkronisasi dari Google Sheets');
+      }
+    } catch(e) { toast('Tidak tersambung ke Sheets — menampilkan data lokal'); }
+    finally { hideLoading(); }
+  }
+
+  // Filter
+  let filtered = subs;
+  if (nama) {
+    const n = nama.toLowerCase();
+    filtered = filtered.filter(s => (s.reviewer||'').toLowerCase().includes(n));
+  }
+  if (docFil) filtered = filtered.filter(s => s.code === docFil);
+
+  // Sort newest first
+  filtered.sort((a,b) => new Date(b.timestamp||0) - new Date(a.timestamp||0));
+
+  document.getElementById('arsipTitle').textContent =
+    nama ? `Arsip: ${nama}` : 'Semua Arsip Lokal';
+  document.getElementById('arsipCount').textContent =
+    `${filtered.length} submission ditemukan${ep?'':' (data lokal — belum terhubung ke Sheets)'}`;
+
+  renderArsipCards(filtered);
+}
+
+// ════════════════════════════════════════════════════════════════════════
+// RENDER ARSIP CARDS
+// ════════════════════════════════════════════════════════════════════════
+function renderArsipCards(subs) {
+  const container = document.getElementById('arsipCards');
+  if (!subs.length) {
+    container.innerHTML = `<div class="empty-state">
+      <div class="empty-icon">🗂</div>
+      <div class="empty-title">Belum ada submission ditemukan</div>
+      <div class="empty-sub">Submission tersimpan secara otomatis di browser setelah Anda mengklik Kirim Review. Pastikan nama yang dicari sama dengan nama yang diisi di form.</div>
+      <button class="btn btn-primary" style="margin:0 auto" onclick="switchTab('form',null)">+ Isi Review Sekarang</button>
+    </div>`;
+    return;
+  }
+
+  // Store all submissions in window._cardData so edit buttons can retrieve them
+  window._cardData = {};
+  subs.forEach(s => { window._cardData[s.rowId] = s; });
+  container.innerHTML = subs.map((s, idx) => buildCard(s, idx)).join('');
+}
+
+function buildCard(s, idx) {
+  const statusBadge = `<span class="badge badge-${s.status||'belum'}">${
+    s.status==='selesai'?'Selesai Direview':s.status==='proses'?'Sedang Proses':'Belum'
+  }</span>`;
+
+  const fbHistArr = Array.isArray(s.feedbackHistory)
+    ? s.feedbackHistory : (s.feedback ? [s.feedback] : []);
+  const fbLatest  = fbHistArr[fbHistArr.length - 1];
+  const fbVerdict = fbLatest?.verdict || '';
+  const fbBadge = fbVerdict
+    ? `<span class="fb-badge fb-${fbVerdict}">${
+        fbVerdict==='disetujui'?'✅ Disetujui':fbVerdict==='revisi'?'🔄 Perlu Revisi':'↩ Review Ulang'
+      }${fbHistArr.length>1?' ('+fbHistArr.length+'x)':''}</span>`
+    : `<span class="fb-badge fb-pending">⏳ Belum ada feedback</span>`;
+
+  let gapPills = '';
+  if (s.gapH) gapPills += `<span class="gap-pill" style="background:var(--lred);color:var(--red)">${s.gapH} 🔴 Tinggi</span>`;
+  if (s.gapM) gapPills += `<span class="gap-pill" style="background:var(--lamber);color:var(--amber)">${s.gapM} 🟡 Sedang</span>`;
+  if (!s.gapH && !s.gapM) gapPills = `<span class="gap-pill" style="background:var(--lgray);color:var(--mgray)">Belum ada gap</span>`;
+
+  // Build gaps HTML
+  let gapsHtml = '';
+  try {
+    const gaps = JSON.parse(s.gapsJson || '[]');
+    if (gaps.length) {
+      const pemMap = {siapa:'SIAPA',kapan:'KAPAN',kondisi:'KONDISI',gagal:'GAGAL',lainnya:'Lainnya'};
+      gapsHtml = `<div class="gap-detail-list">${gaps.map(g => {
+        const pemTags = (g.pemandu||[]).map(p=>`<span style="font-size:10px;font-weight:600;padding:2px 6px;border-radius:4px;background:rgba(0,0,0,0.08);margin-right:4px;">${pemMap[p]||p}</span>`).join('');
+        return `
+        <div class="gap-detail-item gap-${g.dampak||'rendah'}">
+          <div class="gap-detail-icon">${g.dampak==='tinggi'?'🔴':g.dampak==='sedang'?'🟡':'🟢'}</div>
+          <div class="gap-detail-text">
+            <div class="gap-detail-aspek">${g.aspek||'—'}${pemTags?'&nbsp;'+pemTags:''}</div>
+            ${g.desc}
+          </div>
+        </div>`}).join('')}</div>`;
+    }
+  } catch(e){}
+
+  // Detail section
+  const aspekMap = {P:'Produk',S:'Sistem',M:'SDM',I:'Infrastruktur'};
+  const aspekTxt = (s.aspek||'').split(',').filter(Boolean).map(a=>aspekMap[a]||a).join(', ') || '—';
+  const karakterMap = {panduan_teknis:'Panduan Teknis',sop_operasional:'SOP Operasional',
+    kebijakan:'Kebijakan',template:'Template',campuran:'Campuran'};
+  const integrasiMap = {terintegrasi:'Terintegrasi',perlu_jembatan:'Perlu Jembatan',
+    berdiri_sendiri:'Berdiri Sendiri',tumpang_tindih:'Tumpang Tindih'};
+
+  // Feedback history display
+  const fbHistory = Array.isArray(s.feedbackHistory)
+    ? s.feedbackHistory
+    : (s.feedback ? [s.feedback] : []);
+
+  let fbDisplayHtml = '';
+  if (fbHistory.length) {
+    const rounds = fbHistory.map((fb, ri) => {
+      const poins   = JSON.parse(fb.poins || '[]');
+      const vLabel  = fb.verdict==='disetujui'?'✅ Disetujui':fb.verdict==='revisi'?'🔄 Perlu Revisi':fb.verdict==='ulang'?'↩ Review Ulang':'—';
+      const vColor  = fb.verdict==='disetujui'?'var(--teal)':fb.verdict==='revisi'?'var(--amber)':'var(--red)';
+      const vBg     = fb.verdict==='disetujui'?'var(--lteal)':fb.verdict==='revisi'?'var(--lamber)':'var(--lred)';
+      const roundId = `fbr_${s.rowId.replace(/[^a-zA-Z0-9]/g,'_')}_${ri}`;
+      // Latest round open by default
+      const isLatest = ri === fbHistory.length - 1;
+      return `
+        <div class="fb-round">
+          <div class="fb-round-header" onclick="toggleRound('${roundId}')">
+            <div>
+              <span style="font-size:13px;font-weight:600;color:var(--dark)">Putaran ${ri+1} — ${fb.nama||'—'}</span>
+              ${fb.jabatan?`<span style="font-size:12px;color:var(--mgray)"> · ${fb.jabatan}</span>`:''}
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span class="fb-round-badge" style="background:${vBg};color:${vColor}">${vLabel}</span>
+              <span style="font-size:11px;color:var(--mgray)">${fb.tanggal||''}</span>
+              <span style="font-size:12px;color:var(--purple)">${isLatest?'▾':'▸'}</span>
+            </div>
+          </div>
+          <div class="fb-round-body${isLatest?' open':''}" id="${roundId}">
+            ${poins.length?`<div style="margin-bottom:8px">
+              <div style="font-size:11px;font-weight:600;color:var(--mgray);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px;">Poin yang Perlu Diperbaiki</div>
+              ${poins.map(p=>`<div class="fb-poin"><div class="fb-poin-dot">▸</div><div style="font-size:13px">${p}</div></div>`).join('')}
+            </div>`:''}
+            ${fb.apresiasi?`<div class="fb-learning">
+              <div class="fb-learning-title">👍 Yang Sudah Baik</div>
+              <div class="fb-learning-text">${fb.apresiasi}</div>
+            </div>`:''}
+            ${fb.catatanSOP?`<div style="margin-top:8px;padding:10px 12px;background:var(--sky);border-radius:8px;font-size:13px">
+              📌 <strong>Catatan untuk SOP Kupen:</strong> ${fb.catatanSOP}</div>`:''}
+            ${fb.deadline?`<div style="margin-top:8px;font-size:12px;color:var(--amber);font-weight:500">⏰ Tenggat: ${fb.deadline}</div>`:''}
+          </div>
+        </div>`;
+    }).join('');
+
+    fbDisplayHtml = `<div class="fb-history">
+      <div class="fb-history-title">💬 Riwayat Feedback (${fbHistory.length} putaran)</div>
+      ${rounds}
+    </div>`;
+  }
+
+  // Feedback form (inline, hidden by default)
+  const fbId = `fb_${s.rowId.replace(/[^a-zA-Z0-9]/g,'_')}`;
+  const fb   = fbHistArr[fbHistArr.length-1] || {};
+  const fbPoinRows = (fb.poins ? JSON.parse(fb.poins) : ['']).map((p,i) => buildPoinRow(fbId, i+1, p)).join('');
+
+  return `
+<div class="sub-card" id="card_${s.rowId.replace(/[^a-zA-Z0-9]/g,'_')}">
+  <!-- HEADER (clickable to expand detail) -->
+  <div class="sub-card-header" onclick="toggleExpand('det_${s.rowId.replace(/[^a-zA-Z0-9]/g,'_')}')">
+    <div style="flex:1">
+      <div class="sub-doc-code">${s.code}</div>
+      <div class="sub-doc-name">${s.name||s.code}</div>
+      <div class="sub-meta">
+        Reviewer: ${s.reviewer||'—'} · ${s.unit||'—'} · ${s.tanggal||'—'}<br>
+        Progress: ${s.progress||0}%
+      </div>
+      <div class="gap-pills" style="margin-top:8px;">${gapPills}</div>
+    </div>
+    <div class="sub-right">
+      ${statusBadge}
+      ${fbBadge}
+      <div class="sub-actions">
+        <button class="btn btn-outline" style="font-size:12px;padding:6px 12px;"
+          onclick="event.stopPropagation();loadEditFormById('${s.rowId}')">✏️ Edit</button>
+        <button class="btn btn-outline" style="font-size:12px;padding:6px 12px;color:var(--red);border-color:var(--red);"
+          id="delbtn_${s.rowId.replace(/[^a-zA-Z0-9]/g,'_')}"
+          onclick="event.stopPropagation();confirmDelete('${s.rowId}')">🗑 Hapus</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- EXPANDABLE DETAIL -->
+  <div class="sub-expand" id="det_${s.rowId.replace(/[^a-zA-Z0-9]/g,'_')}">
+    <div class="sub-detail">
+      <div style="font-size:12px;font-weight:600;color:var(--mgray);text-transform:uppercase;
+        letter-spacing:.5px;margin-bottom:10px;">Detail Review</div>
+      <div class="detail-grid">
+        <div class="detail-item">
+          <div class="detail-label">Aspek Dicakup</div>
+          <div class="detail-value">${aspekTxt}</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-label">Karakter Dokumen</div>
+          <div class="detail-value">${karakterMap[s.karakter]||s.karakter||'—'}</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-label">Tingkat Integrasi</div>
+          <div class="detail-value">${integrasiMap[s.integrasi]||s.integrasi||'—'}</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-label">Rujukan ke Kupen</div>
+          <div class="detail-value">${s.rSebut||'—'}</div>
+        </div>
+        ${s.tujuan?`<div class="detail-item detail-full">
+          <div class="detail-label">Tujuan Dokumen</div>
+          <div class="detail-value">${s.tujuan}</div>
+        </div>`:''}
+        ${s.rekomen?`<div class="detail-item detail-full">
+          <div class="detail-label">Rekomendasi</div>
+          <div class="detail-value">${s.rekomen}</div>
+        </div>`:''}
+      </div>
+      ${gapsHtml ? `<div style="font-size:12px;font-weight:600;color:var(--mgray);text-transform:uppercase;
+        letter-spacing:.5px;margin-bottom:8px;">Gap Ditemukan</div>${gapsHtml}` : ''}
+    </div>
+
+    <!-- FEEDBACK AREA -->
+    <div class="feedback-panel">
+      <div class="feedback-panel-header" onclick="toggleFeedbackForm('${fbId}')">
+        <div class="feedback-panel-title">
+          💬 Feedback &amp; Evaluasi
+          ${s.feedback ? fbBadge : '<span style="font-size:11px;font-weight:400;color:var(--purple);margin-left:6px;">Klik untuk memberikan feedback</span>'}
+        </div>
+        <span class="feedback-toggle-icon" id="icon_${fbId}">▾</span>
+      </div>
+
+      ${fbDisplayHtml ? `<div id="fbdisplay_${fbId}">${fbDisplayHtml}</div>` : ''}
+
+      <div class="feedback-form" id="${fbId}">
+        <div class="info-box info-purple" style="margin-bottom:14px;font-size:12px;padding:10px 14px;">
+          ${fbHistArr.length > 0
+            ? `📋 Sudah ada <strong>${fbHistArr.length} feedback</strong> sebelumnya. Mengisi ini akan menambah putaran baru — riwayat tetap tersimpan.`
+            : '💬 Belum ada feedback untuk submission ini. Anda bisa memberikan penilaian di bawah.'}
+        </div>
+        <div style="margin-bottom:14px;padding:10px 14px;border-radius:8px;font-size:12px;line-height:1.5;
+          background:rgba(91,33,182,0.06);border-left:3px solid var(--purple);">
+          ${fbHistArr.length > 0
+            ? `📋 Sudah ada <strong>${fbHistArr.length} putaran feedback</strong>. Mengisi ini akan menambah putaran baru — riwayat tetap tersimpan.`
+            : '💬 Belum ada feedback. Berikan penilaian dan catatan di bawah.'}
+        </div>
+        <div class="grid2" style="margin-bottom:14px;">
+          <div class="field" style="margin-bottom:0">
+            <label>Diisi oleh <span class="req">*</span></label>
+            <input type="text" id="${fbId}_nama" placeholder="Nama reviewer senior / manajer" value=""/>
+          </div>
+          <div class="field" style="margin-bottom:0">
+            <label>Jabatan</label>
+            <input type="text" id="${fbId}_jabatan" placeholder="Jabatan / fungsi" value="${fb.jabatan||''}"/>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Hasil Evaluasi</label>
+          <div class="verdict-opts" id="${fbId}_verdicts">
+            <div class="verdict-opt${fb.verdict==='disetujui'?' selected':''}" data-val="disetujui"
+              onclick="selVerdict('${fbId}',this)">✅ Disetujui<div class="verdict-sub">Dapat dilanjutkan</div></div>
+            <div class="verdict-opt${fb.verdict==='revisi'?' selected':''}" data-val="revisi"
+              onclick="selVerdict('${fbId}',this)">🔄 Perlu Revisi<div class="verdict-sub">Ada yang perlu diperbaiki</div></div>
+            <div class="verdict-opt${fb.verdict==='ulang'?' selected':''}" data-val="ulang"
+              onclick="selVerdict('${fbId}',this)">↩ Review Ulang<div class="verdict-sub">Lakukan dari awal</div></div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Poin yang Perlu Diperbaiki / Diperkuat</label>
+          <div class="poin-wrap" id="${fbId}_poins">${fbPoinRows}</div>
+          <button class="add-poin-btn" onclick="addPoinRow('${fbId}')">+ Tambah Poin</button>
+        </div>
+
+        <div class="field">
+          <label>Apresiasi / Hal yang Sudah Baik</label>
+          <textarea id="${fbId}_apresiasi" style="min-height:60px"
+            placeholder="Bagian dari review ini yang sudah baik dan perlu dipertahankan…">${fb.apresiasi||''}</textarea>
+        </div>
+
+        <div class="grid2">
+          <div class="field" style="margin-bottom:0">
+            <label>Catatan untuk Penyusunan SOP Kupen</label>
+            <textarea id="${fbId}_catatanSOP" style="min-height:60px"
+              placeholder="Temuan yang perlu dibawa ke rapat tim penyusunan SOP…">${fb.catatanSOP||''}</textarea>
+          </div>
+          <div class="field" style="margin-bottom:0">
+            <label>Tenggat Revisi</label>
+            <input type="text" id="${fbId}_deadline" placeholder="Contoh: 25/03/2026" value="${fb.deadline||''}"/>
+          </div>
+        </div>
+
+        <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:16px;">
+          <button class="btn btn-outline" style="font-size:13px;padding:8px 16px;"
+            onclick="toggleFeedbackForm('${fbId}')">Tutup</button>
+          <button class="btn btn-purple" style="font-size:13px;padding:8px 18px;"
+            onclick="saveFeedback('${fbId}','${s.rowId}')">💾 Simpan Feedback</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+`;
+}
+
+function buildPoinRow(fbId, n, text='') {
+  const id = `${fbId}_poin_${n}_${Date.now()}`;
+  return `<div class="poin-item" id="${id}">
+    <div class="poin-num">${n}</div>
+    <textarea class="poin-input" placeholder="Poin perbaikan atau catatan…">${text}</textarea>
+    <button class="del-poin" onclick="document.getElementById('${id}').remove()">×</button>
+  </div>`;
+}
+
+let fbPoinCounters = {};
+function addPoinRow(fbId) {
+  fbPoinCounters[fbId] = (fbPoinCounters[fbId]||1) + 1;
+  const wrap = document.getElementById(fbId+'_poins');
+  if (!wrap) return;
+  const n = wrap.children.length + 1;
+  wrap.insertAdjacentHTML('beforeend', buildPoinRow(fbId, n));
+}
+
+// ════════════════════════════════════════════════════════════════════════
+// EXPAND / TOGGLE
+// ════════════════════════════════════════════════════════════════════════
+function toggleExpand(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.classList.toggle('open');
+}
+function toggleFeedbackForm(fbId) {
+  const form = document.getElementById(fbId);
+  const icon = document.getElementById('icon_'+fbId);
+  if (!form) return;
+  form.classList.toggle('open');
+  if (icon) icon.classList.toggle('open');
+}
+function toggleRound(roundId) {
+  const body = document.getElementById(roundId);
+  if (body) body.classList.toggle('open');
+}
+function openFeedbackForm(rowId, open, event) {
+  if (event) event.stopPropagation();
+  // Find fbId from rowId
+  const safeId = rowId.replace(/[^a-zA-Z0-9]/g,'_');
+  const fbId   = 'fb_' + safeId;
+  const form   = document.getElementById(fbId);
+  if (form && open) form.classList.add('open');
+}
+function selVerdict(fbId, el) {
+  document.querySelectorAll(`#${fbId}_verdicts .verdict-opt`).forEach(v => v.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+// ════════════════════════════════════════════════════════════════════════
+// SAVE FEEDBACK (locally + Sheets)
+// ════════════════════════════════════════════════════════════════════════
+async function saveFeedback(fbId, rowId) {
+  const nama = document.getElementById(fbId+'_nama')?.value.trim();
+  if (!nama) { toast('⚠ Nama pengisi feedback wajib diisi'); return; }
+
+  const poins = [...document.querySelectorAll(`#${fbId}_poins .poin-input`)]
+    .map(t => t.value.trim()).filter(Boolean);
+
+  const verdictEl = document.querySelector(`#${fbId}_verdicts .verdict-opt.selected`);
+
+  const feedback = {
+    nama,
+    jabatan:    document.getElementById(fbId+'_jabatan')?.value.trim() || '',
+    verdict:    verdictEl?.dataset.val || '',
+    poins:      JSON.stringify(poins),
+    apresiasi:  document.getElementById(fbId+'_apresiasi')?.value.trim() || '',
+    catatanSOP: document.getElementById(fbId+'_catatanSOP')?.value.trim() || '',
+    deadline:   document.getElementById(fbId+'_deadline')?.value.trim() || '',
+    tanggal:    new Date().toLocaleDateString('id-ID'),
+    timestamp:  new Date().toISOString(),
+  };
+
+  // Save to local store — APPEND to history array (tidak menimpa)
+  const subs = getLocalSubmissions();
+  const idx  = subs.findIndex(s => s.rowId === rowId);
+  if (idx >= 0) {
+    if (!Array.isArray(subs[idx].feedbackHistory)) {
+      // Migrate old single feedback to array
+      subs[idx].feedbackHistory = subs[idx].feedback ? [subs[idx].feedback] : [];
+    }
+    // Remove any existing entry from same reviewer (update-in-place jika orang sama submit lagi)
+    subs[idx].feedbackHistory = subs[idx].feedbackHistory.filter(f => f.nama !== feedback.nama);
+    subs[idx].feedbackHistory.push(feedback);
+    subs[idx].feedback = feedback; // keep latest for badge
+    saveLocalSubmissions(subs);
+  }
+
+  // Send to Sheets
+  const ep = pScript || ls('kupen_script_url');
+  if (ep) {
+    try {
+      await fetch(ep, { method:'POST', mode:'no-cors',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({
+          action: 'submitFeedback',
+          code:   subs[idx]?.code || '',
+          reviewerTarget: subs[idx]?.reviewer || '',
+          editRowId: rowId,
+          fbNama: feedback.nama, fbJabatan: feedback.jabatan,
+          verdict: feedback.verdict, poins: feedback.poins,
+          apresiasi: feedback.apresiasi, catatanSOP: feedback.catatanSOP,
+          deadline: feedback.deadline, timestamp: feedback.timestamp,
+        })
+      });
+    } catch(e) {}
+  }
+
+  toast('✅ Feedback tersimpan');
+  // Re-render arsip to show updated feedback
+  setTimeout(() => loadArsip(), 300);
+}
+
+// ════════════════════════════════════════════════════════════════════════
+// CARD DATA STORE — keyed by rowId so edit button can find submission data
+// ════════════════════════════════════════════════════════════════════════
+window._cardData = {};
+
+function loadEditFormById(rowId) {
+  const s = window._cardData[rowId];
+  if (!s) { toast('⚠ Data tidak ditemukan, coba Sync ulang'); return; }
+  loadEditForm(s);
+}
+
+// ════════════════════════════════════════════════════════════════════════
+// LOAD EDIT FORM
+// ════════════════════════════════════════════════════════════════════════
+function loadEditForm(s) {
+  editMode  = true;
+  editRowId = s.rowId || '';
+  switchTab('form', null);
+
+  document.getElementById('fNama').value  = s.reviewer || '';
+  document.getElementById('fUnit').value  = s.unit     || '';
+  document.getElementById('fTanggal').value = s.tanggal || '';
+
+  const sel = document.getElementById('fDoc');
+  for (let o of sel.options) if (o.value === s.code) { o.selected = true; break; }
+  document.getElementById('bannerCode').textContent = s.code || '—';
+  document.getElementById('bannerName').textContent = s.name || s.code || '—';
+  document.getElementById('editBadge').style.display = 'inline-flex';
+
+  if (s.status) {
+    selStatus = s.status;
+    document.querySelectorAll('.status-opt').forEach(e => {
+      if (e.classList.contains('sel-'+s.status)) e.classList.add('selected');
+      else e.classList.remove('selected');
+    });
+  }
+  if (s.progress) {
+    selProgress = Number(s.progress);
+    document.querySelectorAll('.progress-opt').forEach(e => {
+      e.classList.toggle('selected', e.textContent.trim() === s.progress+'%');
+    });
+  }
+  const aspekArr = (s.aspek||'').split(',').map(a=>a.trim());
+  ['P','S','M','I'].forEach(a => {
+    const cb = document.getElementById('aspek'+a);
+    const card = cb?.closest('.aspek-card');
+    const has = aspekArr.includes(a);
+    if (cb) cb.checked = has;
+    if (card) card.classList.toggle('checked', has);
+  });
+  document.getElementById('fTujuan').value    = s.tujuan    || '';
+  document.getElementById('fKuat').value      = s.kuat      || '';
+  document.getElementById('fKarakter').value  = s.karakter  || '';
+  document.getElementById('fIntegrasi').value = s.integrasi || '';
+  document.getElementById('fRekomen').value   = s.rekomen   || '';
+  document.getElementById('fCatatan').value   = s.catatan   || '';
+  if (s.rSebut) {
+    const r = document.querySelector(`input[name="rSebut"][value="${s.rSebut}"]`);
+    if (r) r.checked = true;
+  }
+  document.getElementById('gapBody').innerHTML = '';
+  gapCount = 0;
+  try {
+    const gaps = JSON.parse(s.gapsJson || '[]');
+    if (gaps.length) gaps.forEach(g => addGapRow(g.aspek, g.desc, g.dampak, g.pemandu||[]));
+    else { addGapRow(); addGapRow(); }
+  } catch(e) { addGapRow(); addGapRow(); }
+
+  window.scrollTo({top:0, behavior:'smooth'});
+  toast('✏️ Form dimuat dalam Mode Edit — perubahan akan memperbarui data sebelumnya');
+}
+
+// ════════════════════════════════════════════════════════════════════════
+// RESET FORM
+// ════════════════════════════════════════════════════════════════════════
+function resetForm() {
+  editMode = false; editRowId = '';
+  ['fNama','fUnit','fTujuan','fKuat','fRekomen','fCatatan'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.value = '';
+  });
+  ['fKarakter','fIntegrasi','fDoc'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.value = '';
+  });
+  const today = new Date();
+  document.getElementById('fTanggal').value = `${pad(today.getDate())}/${pad(today.getMonth()+1)}/${today.getFullYear()}`;
+  document.getElementById('bannerCode').textContent = pDoc || '—';
+  document.getElementById('bannerName').textContent = pName || 'Pilih dokumen yang Anda review';
+  document.getElementById('editBadge').style.display = 'none';
+  selStatus=''; selProgress=0;
+  document.querySelectorAll('.status-opt').forEach(e=>e.classList.remove('selected'));
+  document.querySelectorAll('.progress-opt').forEach(e=>e.classList.remove('selected'));
+  document.querySelectorAll('.aspek-card').forEach(c=>{
+    c.classList.remove('checked'); c.querySelector('input').checked=false;
+  });
+  const rChecked = document.querySelector('input[name="rSebut"]:checked');
+  if (rChecked) rChecked.checked = false;
+  document.getElementById('gapBody').innerHTML='';
+  gapCount=0; addGapRow(); addGapRow();
+}
+
+// ════════════════════════════════════════════════════════════════════════
+// SUCCESS
+// ════════════════════════════════════════════════════════════════════════
+function showSuccess(type) {
+  document.getElementById('mainTopbar').style.display    = 'none';
+  document.getElementById('tab-form').style.display      = 'none';
+  document.getElementById('formSubmitBar').style.display = 'none';
+  document.getElementById('successScreen').style.display = 'block';
+  const icon  = document.getElementById('successIcon');
+  const title = document.getElementById('successTitle');
+  const msg   = document.getElementById('successMsg');
+  if (type==='edit') {
+    icon.textContent = '✏️'; title.style.color='var(--amber)';
+    title.textContent = 'Review Berhasil Diperbarui!';
+    msg.textContent = 'Perubahan tersimpan. Bisa dilihat di tab Arsip & Feedback.';
+  } else {
+    icon.textContent = '✅'; title.style.color='var(--teal)';
+    title.textContent = 'Review Berhasil Dikirim!';
+    msg.textContent = 'Data tersimpan di browser dan (jika terhubung) di Google Sheets. Lihat di tab Arsip & Feedback.';
+  }
+}
+
+// ════════════════════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════════════════════
+// DELETE SUBMISSION — 2-step confirmation
+// ════════════════════════════════════════════════════════════════════════
+function confirmDelete(rowId) {
+  // Step 1: change button to confirm state
+  const safeId = rowId.replace(/[^a-zA-Z0-9]/g,'_');
+  const btn    = document.getElementById('delbtn_' + safeId);
+  if (!btn) return;
+
+  // Already in confirm state — second click = execute
+  if (btn.dataset.confirm === 'yes') {
+    executeDelete(rowId);
+    return;
+  }
+
+  // First click — switch to confirm state
+  btn.dataset.confirm  = 'yes';
+  btn.textContent      = '⚠ Yakin hapus?';
+  btn.style.background = 'var(--red)';
+  btn.style.color      = 'white';
+  btn.style.borderColor= 'var(--red)';
+
+  // Auto-reset after 4 seconds if not confirmed
+  setTimeout(() => {
+    if (btn && btn.dataset.confirm === 'yes') {
+      btn.dataset.confirm  = '';
+      btn.textContent      = '🗑 Hapus';
+      btn.style.background = '';
+      btn.style.color      = 'var(--red)';
+      btn.style.borderColor= 'var(--red)';
+    }
+  }, 4000);
+}
+
+function executeDelete(rowId) {
+  const subs    = getLocalSubmissions();
+  const updated = subs.filter(s => s.rowId !== rowId);
+  saveLocalSubmissions(updated);
+  delete window._cardData[rowId];
+  toast('🗑 Submission dihapus');
+  // Re-render with current filter
+  loadArsip();
+}
+
+// TOAST & LOADING
+// ════════════════════════════════════════════════════════════════════════
+function toast(msg, dur=3500) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), dur);
+}
+function showLoading(msg='Memuat…') {
+  document.getElementById('loadingTxt').textContent = msg;
+  document.getElementById('loadingOverlay').classList.add('visible');
+}
+function hideLoading() { document.getElementById('loadingOverlay').classList.remove('visible'); }
+</script>
+</body>
+</html>
