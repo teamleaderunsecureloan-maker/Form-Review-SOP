@@ -448,7 +448,7 @@ textarea{resize:vertical;min-height:80px;line-height:1.5;}
       </div>
       <div class="field">
         <label>Unit / Jabatan</label>
-        <input type="text" id="fUnit" placeholder="Contoh: Divisi Kredit Konsumer"/>
+        <input type="text" id="fUnit" placeholder="Contoh: Unit Product Research & Development "/>
       </div>
     </div>
     <div class="grid2">
@@ -655,6 +655,7 @@ textarea{resize:vertical;min-height:80px;line-height:1.5;}
       </select>
       <button class="btn btn-primary" style="padding:8px 18px;font-size:13px;" onclick="loadArsip()">🔍 Cari</button>
       <button class="btn btn-outline" style="padding:8px 14px;font-size:13px;" onclick="loadArsip(true)" title="Muat ulang dari Sheets jika tersambung">↻ Sync</button>
+      <button class="btn btn-outline" style="padding:8px 14px;font-size:13px;color:var(--teal);border-color:var(--teal);" onclick="manualPushToSheets()" title="Upload semua data lokal ke Google Sheets">⬆ Upload ke Sheets</button>
     </div>
   </div>
 
@@ -894,7 +895,13 @@ function collectPayload() {
   return {
     rowId:     editMode ? editRowId : ('R' + Date.now() + Math.random().toString(36).slice(2,5).toUpperCase()),
     code,
-    name:      document.getElementById('bannerName').textContent,
+    name:      (function(){
+      const sel = document.getElementById('fDoc');
+      const opt = sel.options[sel.selectedIndex];
+      if (opt && opt.value && opt.value !== 'LAINNYA') return opt.text.split('—')[1]?.trim() || opt.text;
+      if (document.getElementById('fDocManual')?.value) return document.getElementById('fDocManual').value;
+      return document.getElementById('bannerName').textContent;
+    })(),
     type:      document.getElementById('fKarakter').value,
     reviewer:  document.getElementById('fNama').value.trim(),
     unit:      document.getElementById('fUnit').value.trim(),
@@ -1044,14 +1051,11 @@ async function loadArsip(forceSync) {
         saveLocalSubmissions(subs);
         toast('✓ ' + json.submissions.length + ' submission dimuat dari Google Sheets');
       } else {
-        // Sheets kosong — push data lokal ke Sheets jika ada
-        if (subs.length && forceSync) {
-          toast('⬆ Sheets kosong — mengirim ' + subs.length + ' data lokal ke Sheets…');
-          await pushLocalToSheets(subs, ep);
-        } else if (!subs.length) {
-          toast('ℹ Sheets terhubung tapi belum ada submission');
+        // Sheets kosong atau tidak ada data baru
+        if (!subs.length) {
+          toast('ℹ Sheets terhubung — belum ada submission');
         } else {
-          toast('✓ Terhubung — ' + subs.length + ' data dari browser lokal');
+          toast('✓ Terhubung ke Sheets — menampilkan ' + subs.length + ' data lokal');
         }
       }
     } catch(e) {
@@ -1621,19 +1625,26 @@ function confirmDelete(rowId) {
   }, 4000);
 }
 
-// Push semua data lokal ke Sheets (satu per satu)
-async function pushLocalToSheets(subs, ep) {
-  let pushed = 0;
+// Manual upload semua data lokal ke Sheets
+async function manualPushToSheets() {
+  const ep   = pScript || ls('kupen_script_url');
+  const subs = getLocalSubmissions();
+  if (!ep)        { toast('⚠ Belum ada URL Apps Script — buka ⚙️ dulu'); return; }
+  if (!subs.length){ toast('⚠ Tidak ada data lokal untuk diupload'); return; }
+  if (!confirm(`Upload ${subs.length} submission ke Google Sheets?\n\nData yang sudah ada di Sheets tidak akan terduplikasi.`)) return;
+
+  showLoading('Mengupload ke Google Sheets…');
+  let pushed = 0, failed = 0;
   for (const s of subs) {
     try {
       const payload = { ...s, action: 'submitReview' };
       await apiFetch(ep, payload);
       pushed++;
-    } catch(e) {}
+    } catch(e) { failed++; }
   }
-  toast('✅ ' + pushed + ' submission berhasil dikirim ke Google Sheets');
-  // Reload to confirm
-  setTimeout(() => loadArsip(true), 1500);
+  hideLoading();
+  toast('✅ ' + pushed + ' submission diupload' + (failed ? ` (${failed} gagal)` : ''));
+  setTimeout(() => loadArsip(true), 1000);
 }
 
 async function executeDelete(rowId) {
@@ -1675,10 +1686,9 @@ function saveConfig() {
   closeConfig();
   const btn = document.getElementById('configBtn');
   if (btn) { btn.textContent = '\u2705'; setTimeout(() => { btn.textContent = '\u2699\ufe0f'; }, 4000); }
-  // Auto pindah ke tab arsip dan sync
+  toast('\u2705 URL tersimpan — klik Sync di tab Arsip untuk memuat data');
   const arsipBtn = document.getElementById('arsipTabBtn');
   switchTab('arsip', arsipBtn);
-  setTimeout(() => loadArsip(true), 400);
 }
 async function testConnection() {
   const url = document.getElementById('configUrl').value.trim();
