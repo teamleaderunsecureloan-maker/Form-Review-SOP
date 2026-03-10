@@ -572,7 +572,7 @@ textarea{resize:vertical;min-height:80px;line-height:1.5;}
           <div class="guide-q"><span class="guide-q-num">3</span><div><strong>KONDISI APA yang memicu proses ini?</strong><div class="guide-q-hint">Apakah dokumen menjelaskan syarat atau trigger-nya? Kalau bisa dimulai kapan saja tanpa syarat — kemungkinan gap.</div></div></div>
           <div class="guide-q"><span class="guide-q-num">4</span><div><strong>KALAU GAGAL, apa yang terjadi selanjutnya?</strong><div class="guide-q-hint">Apakah ada eskalasi, fallback, atau prosedur darurat yang disebutkan? Kalau tidak ada — ini gap kritis.</div></div></div>
         </div>
-        <div class="guide-tip">💡 <strong>Tips:</strong> Kalau semua pertanyaan sudah terjawab di dokumen — tidak perlu menambahkan gap. Tulis di bagian Cakupan yang Sudah Memadai (Bagian 04) bahwa dokumen ini sudah lengkap untuk aspek tersebut..</div>
+        <div class="guide-tip">💡 <strong>Tips:</strong> Tips: Kalau semua pertanyaan sudah terjawab di dokumen — tidak perlu menambahkan gap. Tulis di bagian Cakupan yang Sudah Memadai (Bagian 04) bahwa dokumen ini sudah lengkap untuk aspek tersebut.</div>
       </div>
     </div>
 
@@ -705,7 +705,11 @@ function ls(k, v) {
 // Also backed by localStorage for same-browser persistence
 const STORE_KEY = 'kupen_submissions';
 function getLocalSubmissions() {
-  try { return JSON.parse(localStorage.getItem(STORE_KEY) || '[]'); }
+  try {
+    const raw = JSON.parse(localStorage.getItem(STORE_KEY) || '[]');
+    // Sanitasi code di semua submission — perbaiki data lama yang terkontaminasi
+    return raw.map(s => ({ ...s, code: sanitizeCode(s.code || '') }));
+  }
   catch(e) { return []; }
 }
 function saveLocalSubmissions(arr) {
@@ -889,7 +893,7 @@ function collectPayload() {
   const aspekChecked = ['P','S','M','I'].filter(a => document.getElementById('aspek'+a)?.checked);
   const gaps   = collectGaps();
   const docVal = document.getElementById('fDoc').value;
-  const code   = docVal === 'LAINNYA' ? document.getElementById('fDocManual').value : docVal;
+  const code   = sanitizeCode(docVal === 'LAINNYA' ? document.getElementById('fDocManual').value : docVal);
   const gapH   = gaps.filter(g => g.dampak==='tinggi').length;
   const gapM   = gaps.filter(g => g.dampak==='sedang').length;
   return {
@@ -961,6 +965,21 @@ function saveToLocal(payload) {
 // ════════════════════════════════════════════════════════════════════════
 // SUBMIT REVIEW
 // ════════════════════════════════════════════════════════════════════════
+// ── SANITIZE CODE — bersihkan code dari data lama yang terkontaminasi ────────
+const VALID_CODES = ['SOP-KPN','JUK-FLG-TSP','JUK-FLG-ASB','JUK-SPTB',
+  'JUK-DCRM','SOP-ASR','SOP-DOK','SOP-TO','SOP-EDPM'];
+
+function sanitizeCode(raw) {
+  if (!raw) return '';
+  // Kalau sudah bersih — langsung return
+  if (VALID_CODES.includes(raw)) return raw;
+  // Cari kode yang valid di dalam string (misal "SOP-KPN — SOP Kredit...")
+  for (const code of VALID_CODES) {
+    if (String(raw).includes(code)) return code;
+  }
+  return raw; // fallback — kembalikan apa adanya
+}
+
 // ── API FETCH HELPER ─────────────────────────────────────────────────────────
 // Apps Script doPost supports CORS when deployed as "Anyone can access"
 // We send JSON via POST. If CORS fails, we fall back silently (data already in localStorage).
@@ -1505,10 +1524,12 @@ function loadEditForm(s) {
   document.getElementById('fUnit').value  = s.unit     || '';
   document.getElementById('fTanggal').value = s.tanggal || '';
 
+  const cleanCode = sanitizeCode(s.code || '');
   const sel = document.getElementById('fDoc');
-  for (let o of sel.options) if (o.value === s.code) { o.selected = true; break; }
-  document.getElementById('bannerCode').textContent = s.code || '—';
-  document.getElementById('bannerName').textContent = s.name || s.code || '—';
+  for (let o of sel.options) if (o.value === cleanCode) { o.selected = true; break; }
+  document.getElementById('bannerCode').textContent = cleanCode || '—';
+  const docNameMap = {'SOP-KPN':'SOP Kredit Pensiun (Kupen)','JUK-FLG-TSP':'Juklak Flagging Taspen','JUK-FLG-ASB':'Juklak Flagging ASABRI','JUK-SPTB':'Juklak Autentikasi & SPTB','JUK-DCRM':'Juklak Pemeriksaan Dokumen DCRM','SOP-ASR':'Prosedur Pengelolaan Asuransi Kredit','SOP-DOK':'Prosedur Dokumentasi Kredit Konsumer','SOP-TO':'Prosedur Take Over Kredit Konsumer','SOP-EDPM':'Kebijakan Pengelolaan e-Dapem'};
+  document.getElementById('bannerName').textContent = docNameMap[cleanCode] || s.name || cleanCode || '—';
   document.getElementById('editBadge').style.display = 'inline-flex';
 
   if (s.status) {
