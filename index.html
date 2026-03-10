@@ -1023,7 +1023,6 @@ async function loadArsip(forceSync) {
         json.submissions.forEach(remote => {
           const local = localMap[remote.rowId];
           if (local) {
-            // Merge feedbackHistory: combine both arrays, deduplicate by timestamp
             const allFb = [
               ...(remote.feedbackHistory || []),
               ...(local.feedbackHistory  || []),
@@ -1035,7 +1034,6 @@ async function loadArsip(forceSync) {
               seen.add(key); return true;
             });
             remote.feedback = remote.feedbackHistory[remote.feedbackHistory.length-1] || null;
-            // Update local entry
             localMap[remote.rowId] = remote;
           } else {
             localMap[remote.rowId] = remote;
@@ -1044,9 +1042,22 @@ async function loadArsip(forceSync) {
 
         subs = Object.values(localMap);
         saveLocalSubmissions(subs);
-        toast('✓ Data disinkronisasi dari Google Sheets');
+        toast('✓ ' + json.submissions.length + ' submission dimuat dari Google Sheets');
+      } else {
+        // Sheets kosong — push data lokal ke Sheets jika ada
+        if (subs.length && forceSync) {
+          toast('⬆ Sheets kosong — mengirim ' + subs.length + ' data lokal ke Sheets…');
+          await pushLocalToSheets(subs, ep);
+        } else if (!subs.length) {
+          toast('ℹ Sheets terhubung tapi belum ada submission');
+        } else {
+          toast('✓ Terhubung — ' + subs.length + ' data dari browser lokal');
+        }
       }
-    } catch(e) { toast('Tidak tersambung ke Sheets — menampilkan data lokal'); }
+    } catch(e) {
+      console.error('Sync error:', e);
+      toast('⚠ ' + e.message);
+    }
     finally { hideLoading(); }
   }
 
@@ -1610,6 +1621,21 @@ function confirmDelete(rowId) {
   }, 4000);
 }
 
+// Push semua data lokal ke Sheets (satu per satu)
+async function pushLocalToSheets(subs, ep) {
+  let pushed = 0;
+  for (const s of subs) {
+    try {
+      const payload = { ...s, action: 'submitReview' };
+      await apiFetch(ep, payload);
+      pushed++;
+    } catch(e) {}
+  }
+  toast('✅ ' + pushed + ' submission berhasil dikirim ke Google Sheets');
+  // Reload to confirm
+  setTimeout(() => loadArsip(true), 1500);
+}
+
 async function executeDelete(rowId) {
   const subs    = getLocalSubmissions();
   const updated = subs.filter(s => s.rowId !== rowId);
@@ -1646,10 +1672,13 @@ function saveConfig() {
   const url = document.getElementById('configUrl').value.trim();
   if (!url) { toast('\u26a0 URL tidak boleh kosong'); return; }
   ls('kupen_script_url', url);
-  toast('\u2705 URL tersimpan — form sekarang terhubung ke Google Sheets');
   closeConfig();
   const btn = document.getElementById('configBtn');
-  if (btn) { btn.textContent = '\u2705'; setTimeout(() => { btn.textContent = '\u2699\ufe0f'; }, 3000); }
+  if (btn) { btn.textContent = '\u2705'; setTimeout(() => { btn.textContent = '\u2699\ufe0f'; }, 4000); }
+  // Auto pindah ke tab arsip dan sync
+  const arsipBtn = document.getElementById('arsipTabBtn');
+  switchTab('arsip', arsipBtn);
+  setTimeout(() => loadArsip(true), 400);
 }
 async function testConnection() {
   const url = document.getElementById('configUrl').value.trim();
