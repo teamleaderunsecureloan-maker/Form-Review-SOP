@@ -456,13 +456,35 @@ textarea{resize:vertical;min-height:80px;line-height:1.5;}
         <label>Dokumen yang Direview <span class="req">*</span></label>
         <select id="fDoc">
           <option value="">— Pilih dokumen —</option>
-          <option value="JUK-FLG-ASB">JUK-FLG-ASB — Juklak Flagging ASABRI</option>
-          <option value="JUK-SPTB">JUK-SPTB — Juklak Autentikasi &amp; SPTB</option>
-          <option value="JUK-DCRM">JUK-DCRM — Juklak Pemeriksaan Dokumen DCRM</option>
-          <option value="SOP-ASR">SOP-ASR — Prosedur Pengelolaan Asuransi Kredit</option>
-          <option value="SOP-DOK">SOP-DOK — Prosedur Dokumentasi Kredit Konsumer</option>
-          <option value="SOP-TO">SOP-TO — Prosedur Take Over Kredit Konsumer</option>
-          <option value="SOP-EDPM">SOP-EDPM — Kebijakan Pengelolaan e-Dapem</option>
+          <optgroup label="SOP Induk">
+          <option value="SOP-KPN">SOP-KPN — Prosedur Kredit Pensiun (KUPEN)</option>
+          </optgroup>
+          <optgroup label="Juklak Teknis">
+          <option value="JUK-FLG-TSP">JUK-FLG-TSP — Petunjuk Pelaksanaan Aplikasi Flagging Debitur Taspen</option>
+          <option value="JUK-FLG-ASB">JUK-FLG-ASB — Petunjuk Pelaksanaan Aplikasi Flagging ASABRI</option>
+          <option value="JUK-SPTB">JUK-SPTB — Petunjuk Pelaksanaan Kupen &amp; Kupeg Produktif</option>
+          <option value="JUK-DCRM">JUK-DCRM — Petunjuk Pelaksanaan Pemeriksaan Dokumen Pengajuan Kredit Konsumer (DCRM Ritel)</option>
+          <option value="JUK-ASABRI">JUK-ASABRI — Petunjuk Pelaksanaan THT ASABRI</option>
+          </optgroup>
+          <optgroup label="SOP Pendukung">
+          <option value="SOP-ASR">SOP-ASR — Prosedur Pengelolaan Asuransi Aktivitas Kredit</option>
+          <option value="SOP-DOK">SOP-DOK — Prosedur Pengelolaan Dokumentasi Kredit untuk Kredit Konsumer</option>
+          <option value="SOP-TO">SOP-TO — Prosedur Operasional Take Over Kredit</option>
+          <option value="SOP-BLOKIR">SOP-BLOKIR — Prosedur Pemblokiran Angsuran Kredit Konsumer</option>
+          <option value="SOP-DAPEM">SOP-DAPEM — Prosedur Pengelolaan Dapem Taspen</option>
+          <option value="SOP-ASABRI2">SOP-ASABRI2 — Prosedur Pelaksanaan Pembayaran Manfaat Pensiun ASABRI</option>
+          <option value="SOP-EDPM">SOP-EDPM — Prosedur Penyaluran Kredit Konsumer melalui Mekanisme Kerja dengan Lembaga</option>
+          </optgroup>
+          <optgroup label="Kebijakan">
+          <option value="KEP-KPB">KEP-KPB — Kebijakan Perkreditan Bank</option>
+          <option value="KEP-LIMIT">KEP-LIMIT — Limit Kewenangan Memutus Kredit, Bidang Perkreditan dan Pengelolaan Kredit Bermasalah</option>
+          <option value="KEP-SOFTLIM">KEP-SOFTLIM — Standar Penetapan Soft Limit Batas Maksimum Pemberian Kredit</option>
+          <option value="KEP-SLIK">KEP-SLIK — Kebijakan &amp; Prosedur Pelaporan dan Permintaan Informasi Debitur melalui SLIK</option>
+          </optgroup>
+          <optgroup label="Standar">
+          <option value="STD-DOK">STD-DOK — Standarisasi Proses Kredit dan Dokumen Checklist Kredit Konsumer</option>
+          <option value="STD-PK">STD-PK — Standardisasi Perjanjian Kredit untuk Kredit Konsumer</option>
+          </optgroup>
           <option value="LAINNYA">Dokumen lain (isi manual)</option>
         </select>
       </div>
@@ -572,7 +594,7 @@ textarea{resize:vertical;min-height:80px;line-height:1.5;}
           <div class="guide-q"><span class="guide-q-num">3</span><div><strong>KONDISI APA yang memicu proses ini?</strong><div class="guide-q-hint">Apakah dokumen menjelaskan syarat atau trigger-nya? Kalau bisa dimulai kapan saja tanpa syarat — kemungkinan gap.</div></div></div>
           <div class="guide-q"><span class="guide-q-num">4</span><div><strong>KALAU GAGAL, apa yang terjadi selanjutnya?</strong><div class="guide-q-hint">Apakah ada eskalasi, fallback, atau prosedur darurat yang disebutkan? Kalau tidak ada — ini gap kritis.</div></div></div>
         </div>
-        <div class="guide-tip">💡 <strong>Tips:</strong> Tips: Kalau semua pertanyaan sudah terjawab di dokumen — tidak perlu menambahkan gap. Tulis di bagian Cakupan yang Sudah Memadai (Bagian 04) bahwa dokumen ini sudah lengkap untuk aspek tersebut.</div>
+        <div class="guide-tip">💡 <strong>Tips:</strong> Kalau semua pertanyaan sudah terjawab di dokumen — tidak perlu menambahkan gap. Tulis di bagian Cakupan yang Sudah Memadai (Bagian 04) bahwa dokumen ini sudah lengkap untuk aspek tersebut.</div>
       </div>
     </div>
 
@@ -645,13 +667,25 @@ textarea{resize:vertical;min-height:80px;line-height:1.5;}
       <input id="searchNama" placeholder="Nama reviewer…" onkeydown="if(event.key==='Enter')loadArsip()"/>
       <select id="searchDoc">
         <option value="">Semua dokumen</option>
+        <option value="SOP-KPN">SOP-KPN</option>
+        <option value="JUK-FLG-TSP">JUK-FLG-TSP</option>
         <option value="JUK-FLG-ASB">JUK-FLG-ASB</option>
         <option value="JUK-SPTB">JUK-SPTB</option>
         <option value="JUK-DCRM">JUK-DCRM</option>
+        <option value="JUK-ASABRI">JUK-ASABRI</option>
         <option value="SOP-ASR">SOP-ASR</option>
         <option value="SOP-DOK">SOP-DOK</option>
         <option value="SOP-TO">SOP-TO</option>
+        <option value="SOP-BLOKIR">SOP-BLOKIR</option>
+        <option value="SOP-DAPEM">SOP-DAPEM</option>
+        <option value="SOP-ASABRI2">SOP-ASABRI2</option>
         <option value="SOP-EDPM">SOP-EDPM</option>
+        <option value="KEP-KPB">KEP-KPB</option>
+        <option value="KEP-LIMIT">KEP-LIMIT</option>
+        <option value="KEP-SOFTLIM">KEP-SOFTLIM</option>
+        <option value="KEP-SLIK">KEP-SLIK</option>
+        <option value="STD-DOK">STD-DOK</option>
+        <option value="STD-PK">STD-PK</option>
       </select>
       <button class="btn btn-primary" style="padding:8px 18px;font-size:13px;" onclick="loadArsip()">🔍 Cari</button>
       <button class="btn btn-outline" style="padding:8px 14px;font-size:13px;" onclick="loadArsip(true)" title="Muat ulang dari Sheets jika tersambung">↻ Sync</button>
@@ -783,7 +817,7 @@ document.getElementById('fDoc').addEventListener('change', function() {
   const opt = this.options[this.selectedIndex];
   if (opt && opt.value && opt.value !== 'LAINNYA') {
     document.getElementById('bannerCode').textContent = opt.value;
-    const nameMap = {'SOP-KPN':'SOP Kredit Pensiun (Kupen)','JUK-FLG-TSP':'Juklak Flagging Taspen','JUK-FLG-ASB':'Juklak Flagging ASABRI','JUK-SPTB':'Juklak Autentikasi & SPTB','JUK-DCRM':'Juklak Pemeriksaan Dokumen DCRM','SOP-ASR':'Prosedur Pengelolaan Asuransi Kredit','SOP-DOK':'Prosedur Dokumentasi Kredit Konsumer','SOP-TO':'Prosedur Take Over Kredit Konsumer','SOP-EDPM':'Kebijakan Pengelolaan e-Dapem'};
+    const nameMap = {'SOP-KPN':'Prosedur Kredit Pensiun (KUPEN)','JUK-FLG-TSP':'Petunjuk Pelaksanaan Aplikasi Flagging Debitur Taspen','JUK-FLG-ASB':'Petunjuk Pelaksanaan Aplikasi Flagging ASABRI','JUK-SPTB':'Petunjuk Pelaksanaan Kupen & Kupeg Produktif','JUK-DCRM':'Petunjuk Pelaksanaan Pemeriksaan Dokumen Pengajuan Kredit Konsumer (DCRM Ritel)','JUK-ASABRI':'Petunjuk Pelaksanaan THT ASABRI','SOP-ASR':'Prosedur Pengelolaan Asuransi Aktivitas Kredit','SOP-DOK':'Prosedur Pengelolaan Dokumentasi Kredit untuk Kredit Konsumer','SOP-TO':'Prosedur Operasional Take Over Kredit','SOP-BLOKIR':'Prosedur Pemblokiran Angsuran Kredit Konsumer','SOP-DAPEM':'Prosedur Pengelolaan Dapem Taspen','SOP-ASABRI2':'Prosedur Pelaksanaan Pembayaran Manfaat Pensiun ASABRI','SOP-EDPM':'Prosedur Penyaluran Kredit Konsumer melalui Mekanisme Kerja dengan Lembaga','KEP-KPB':'Kebijakan Perkreditan Bank','KEP-LIMIT':'Limit Kewenangan Memutus Kredit, Bidang Perkreditan dan Pengelolaan Kredit Bermasalah','KEP-SOFTLIM':'Standar Penetapan Soft Limit Batas Maksimum Pemberian Kredit','KEP-SLIK':'Kebijakan & Prosedur Pelaporan dan Permintaan Informasi Debitur melalui SLIK','STD-DOK':'Standarisasi Proses Kredit dan Dokumen Checklist Kredit Konsumer','STD-PK':'Standardisasi Perjanjian Kredit untuk Kredit Konsumer'};
     document.getElementById('bannerName').textContent = nameMap[opt.value] || opt.text.split('—')[1]?.trim() || opt.text;
   }
 });
@@ -901,15 +935,25 @@ function collectPayload() {
     code,
     name:      (function(){
       const docNames = {
-        'SOP-KPN':    'SOP Kredit Pensiun (Kupen)',
-        'JUK-FLG-TSP':'Juklak Flagging Taspen',
-        'JUK-FLG-ASB':'Juklak Flagging ASABRI',
-        'JUK-SPTB':   'Juklak Autentikasi & SPTB',
-        'JUK-DCRM':   'Juklak Pemeriksaan Dokumen DCRM',
-        'SOP-ASR':    'Prosedur Pengelolaan Asuransi Kredit',
-        'SOP-DOK':    'Prosedur Dokumentasi Kredit Konsumer',
-        'SOP-TO':     'Prosedur Take Over Kredit Konsumer',
-        'SOP-EDPM':   'Kebijakan Pengelolaan e-Dapem',
+        'SOP-KPN': 'Prosedur Kredit Pensiun (KUPEN)',
+        'JUK-FLG-TSP': 'Petunjuk Pelaksanaan Aplikasi Flagging Debitur Taspen',
+        'JUK-FLG-ASB': 'Petunjuk Pelaksanaan Aplikasi Flagging ASABRI',
+        'JUK-SPTB': 'Petunjuk Pelaksanaan Kupen & Kupeg Produktif',
+        'JUK-DCRM': 'Petunjuk Pelaksanaan Pemeriksaan Dokumen Pengajuan Kredit Konsumer (DCRM Ritel)',
+        'JUK-ASABRI': 'Petunjuk Pelaksanaan THT ASABRI',
+        'SOP-ASR': 'Prosedur Pengelolaan Asuransi Aktivitas Kredit',
+        'SOP-DOK': 'Prosedur Pengelolaan Dokumentasi Kredit untuk Kredit Konsumer',
+        'SOP-TO': 'Prosedur Operasional Take Over Kredit',
+        'SOP-BLOKIR': 'Prosedur Pemblokiran Angsuran Kredit Konsumer',
+        'SOP-DAPEM': 'Prosedur Pengelolaan Dapem Taspen',
+        'SOP-ASABRI2': 'Prosedur Pelaksanaan Pembayaran Manfaat Pensiun ASABRI',
+        'SOP-EDPM': 'Prosedur Penyaluran Kredit Konsumer melalui Mekanisme Kerja dengan Lembaga',
+        'KEP-KPB': 'Kebijakan Perkreditan Bank',
+        'KEP-LIMIT': 'Limit Kewenangan Memutus Kredit, Bidang Perkreditan dan Pengelolaan Kredit Bermasalah',
+        'KEP-SOFTLIM': 'Standar Penetapan Soft Limit Batas Maksimum Pemberian Kredit',
+        'KEP-SLIK': 'Kebijakan & Prosedur Pelaporan dan Permintaan Informasi Debitur melalui SLIK',
+        'STD-DOK': 'Standarisasi Proses Kredit dan Dokumen Checklist Kredit Konsumer',
+        'STD-PK': 'Standardisasi Perjanjian Kredit untuk Kredit Konsumer',
       };
       const sel = document.getElementById('fDoc');
       const val = sel.value;
@@ -966,8 +1010,7 @@ function saveToLocal(payload) {
 // SUBMIT REVIEW
 // ════════════════════════════════════════════════════════════════════════
 // ── SANITIZE CODE — bersihkan code dari data lama yang terkontaminasi ────────
-const VALID_CODES = ['SOP-KPN','JUK-FLG-TSP','JUK-FLG-ASB','JUK-SPTB',
-  'JUK-DCRM','SOP-ASR','SOP-DOK','SOP-TO','SOP-EDPM'];
+const VALID_CODES = ['SOP-KPN','JUK-FLG-TSP','JUK-FLG-ASB','JUK-SPTB','JUK-DCRM','JUK-ASABRI','SOP-ASR','SOP-DOK','SOP-TO','SOP-BLOKIR','SOP-DAPEM','SOP-ASABRI2','SOP-EDPM','KEP-KPB','KEP-LIMIT','KEP-SOFTLIM','KEP-SLIK','STD-DOK','STD-PK'];
 
 function sanitizeCode(raw) {
   if (!raw) return '';
@@ -1210,6 +1253,8 @@ function buildCard(s, idx) {
             <div style="display:flex;align-items:center;gap:8px;">
               <span class="fb-round-badge" style="background:${vBg};color:${vColor}">${vLabel}</span>
               <span style="font-size:11px;color:var(--mgray)">${fb.tanggal||''}</span>
+              ${isLatest?`<button onclick="editFeedback('${s.rowId}','${ri}')" style="background:none;border:1px solid var(--amber);color:var(--amber);border-radius:5px;font-size:11px;padding:2px 8px;cursor:pointer;font-family:var(--font)">✏ Edit</button>
+              <button onclick="deleteFeedback('${s.rowId}','${ri}')" style="background:none;border:1px solid var(--red);color:var(--red);border-radius:5px;font-size:11px;padding:2px 8px;cursor:pointer;font-family:var(--font)">🗑 Hapus</button>`:''}
               <span style="font-size:12px;color:var(--purple)">${isLatest?'▾':'▸'}</span>
             </div>
           </div>
@@ -1439,6 +1484,66 @@ function selVerdict(fbId, el) {
 // ════════════════════════════════════════════════════════════════════════
 // SAVE FEEDBACK (locally + Sheets)
 // ════════════════════════════════════════════════════════════════════════
+function editFeedback(rowId, roundIdx) {
+  const subs = getLocalSubmissions();
+  const sub  = subs.find(s => s.rowId === rowId);
+  if (!sub || !Array.isArray(sub.feedbackHistory)) return;
+  const fb   = sub.feedbackHistory[roundIdx];
+  if (!fb) return;
+
+  const fbId = 'fb_' + rowId.replace(/[^a-zA-Z0-9]/g,'_');
+
+  // Isi form feedback dengan data yang mau diedit
+  const namaEl = document.getElementById(fbId+'_nama');
+  if (namaEl) namaEl.value = fb.nama || '';
+  const jabEl  = document.getElementById(fbId+'_jabatan');
+  if (jabEl)  jabEl.value  = fb.jabatan || '';
+
+  // Set verdict
+  document.querySelectorAll('#'+fbId+'_verdicts .verdict-opt').forEach(el => {
+    el.classList.toggle('selected', el.dataset.val === fb.verdict);
+  });
+
+  // Isi poin
+  const poinsEl = document.getElementById(fbId+'_poins');
+  if (poinsEl) {
+    const poins = fb.poins ? JSON.parse(fb.poins) : [''];
+    poinsEl.innerHTML = poins.map((p,i) => buildPoinRow(fbId, i+1, p)).join('');
+  }
+
+  const aprEl = document.getElementById(fbId+'_apresiasi');
+  if (aprEl) aprEl.value = fb.apresiasi || '';
+  const catEl = document.getElementById(fbId+'_catatanSOP');
+  if (catEl) catEl.value = fb.catatanSOP || '';
+  const dlEl  = document.getElementById(fbId+'_deadline');
+  if (dlEl)  dlEl.value  = fb.deadline || '';
+
+  // Hapus entry lama supaya saveFeedback akan replace (bukan append baru)
+  sub.feedbackHistory.splice(roundIdx, 1);
+  saveLocalSubmissions(subs);
+
+  // Buka panel feedback dan scroll ke sana
+  // Panel feedback id = fbId langsung (bukan fbId+'_form')
+  const fbForm = document.getElementById(fbId);
+  if (fbForm) { fbForm.classList.add('open'); fbForm.scrollIntoView({behavior:'smooth',block:'nearest'}); }
+  toast('✏ Mode edit — ubah lalu klik Simpan Feedback');
+}
+
+function deleteFeedback(rowId, roundIdx) {
+  if (!confirm('Hapus feedback putaran ini?')) return;
+  const subs = getLocalSubmissions();
+  const idx  = subs.findIndex(s => s.rowId === rowId);
+  if (idx < 0) return;
+  if (!Array.isArray(subs[idx].feedbackHistory)) return;
+  subs[idx].feedbackHistory.splice(roundIdx, 1);
+  // Update .feedback ke entry terakhir
+  const hist = subs[idx].feedbackHistory;
+  subs[idx].feedback = hist.length ? hist[hist.length-1] : null;
+  saveLocalSubmissions(subs);
+  toast('🗑 Feedback dihapus');
+  setTimeout(() => loadArsip(), 300);
+}
+
 async function saveFeedback(fbId, rowId) {
   const nama = document.getElementById(fbId+'_nama')?.value.trim();
   if (!nama) { toast('⚠ Nama pengisi feedback wajib diisi'); return; }
@@ -1528,7 +1633,7 @@ function loadEditForm(s) {
   const sel = document.getElementById('fDoc');
   for (let o of sel.options) if (o.value === cleanCode) { o.selected = true; break; }
   document.getElementById('bannerCode').textContent = cleanCode || '—';
-  const docNameMap = {'SOP-KPN':'SOP Kredit Pensiun (Kupen)','JUK-FLG-TSP':'Juklak Flagging Taspen','JUK-FLG-ASB':'Juklak Flagging ASABRI','JUK-SPTB':'Juklak Autentikasi & SPTB','JUK-DCRM':'Juklak Pemeriksaan Dokumen DCRM','SOP-ASR':'Prosedur Pengelolaan Asuransi Kredit','SOP-DOK':'Prosedur Dokumentasi Kredit Konsumer','SOP-TO':'Prosedur Take Over Kredit Konsumer','SOP-EDPM':'Kebijakan Pengelolaan e-Dapem'};
+  const docNameMap = {'SOP-KPN':'Prosedur Kredit Pensiun (KUPEN)','JUK-FLG-TSP':'Petunjuk Pelaksanaan Aplikasi Flagging Debitur Taspen','JUK-FLG-ASB':'Petunjuk Pelaksanaan Aplikasi Flagging ASABRI','JUK-SPTB':'Petunjuk Pelaksanaan Kupen & Kupeg Produktif','JUK-DCRM':'Petunjuk Pelaksanaan Pemeriksaan Dokumen Pengajuan Kredit Konsumer (DCRM Ritel)','JUK-ASABRI':'Petunjuk Pelaksanaan THT ASABRI','SOP-ASR':'Prosedur Pengelolaan Asuransi Aktivitas Kredit','SOP-DOK':'Prosedur Pengelolaan Dokumentasi Kredit untuk Kredit Konsumer','SOP-TO':'Prosedur Operasional Take Over Kredit','SOP-BLOKIR':'Prosedur Pemblokiran Angsuran Kredit Konsumer','SOP-DAPEM':'Prosedur Pengelolaan Dapem Taspen','SOP-ASABRI2':'Prosedur Pelaksanaan Pembayaran Manfaat Pensiun ASABRI','SOP-EDPM':'Prosedur Penyaluran Kredit Konsumer melalui Mekanisme Kerja dengan Lembaga','KEP-KPB':'Kebijakan Perkreditan Bank','KEP-LIMIT':'Limit Kewenangan Memutus Kredit, Bidang Perkreditan dan Pengelolaan Kredit Bermasalah','KEP-SOFTLIM':'Standar Penetapan Soft Limit Batas Maksimum Pemberian Kredit','KEP-SLIK':'Kebijakan & Prosedur Pelaporan dan Permintaan Informasi Debitur melalui SLIK','STD-DOK':'Standarisasi Proses Kredit dan Dokumen Checklist Kredit Konsumer','STD-PK':'Standardisasi Perjanjian Kredit untuk Kredit Konsumer'};
   document.getElementById('bannerName').textContent = docNameMap[cleanCode] || s.name || cleanCode || '—';
   document.getElementById('editBadge').style.display = 'inline-flex';
 
